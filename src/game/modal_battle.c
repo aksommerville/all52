@@ -2,11 +2,13 @@
 
 #define INTRO_TIME 2.000
 #define BGCOLOR 0x0a5617ff
+#define TEXTCOLOR 0xe8ddbbff
 
 struct modal_battle {
   struct modal hdr;
   int hltx,hlty;
   double introclock; // Counts down.
+  int texid,texw,texh;//XXX
 };
 
 #define MODAL ((struct modal_battle*)modal)
@@ -15,6 +17,7 @@ struct modal_battle {
  */
  
 static void _battle_del(struct modal *modal) {
+  egg_texture_del(MODAL->texid);
 }
 
 /* Init.
@@ -30,6 +33,12 @@ static int _battle_init(struct modal *modal,const void *args,int argslen) {
   const struct modal_args_battle *ARGS=args;
   MODAL->hltx=ARGS->hltx;
   MODAL->hlty=ARGS->hlty;
+  
+  MODAL->texid=font_render_multiline(
+    "This is a test of some text that I'm going to render with our 5x3 font. Does it look OK?",-1,
+    FBW,TEXTCOLOR,-1
+  );
+  egg_texture_get_size(&MODAL->texw,&MODAL->texh,MODAL->texid);
     
   return 0;
 }
@@ -97,6 +106,8 @@ static void _battle_render(struct modal *modal) {
   }
   
   graf_fill_rect(&g.graf,0,0,FBW,FBH,BGCOLOR);
+  graf_set_input(&g.graf,MODAL->texid);
+  graf_decal(&g.graf,0,0,0,0,MODAL->texw,MODAL->texh);
   //TODO
 }
 

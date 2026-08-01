@@ -17,6 +17,7 @@ struct sprite_type;
 #include "modal.h"
 #include "world.h"
 #include "sprite.h"
+#include "font.h"
 
 #define FBW 52
 #define FBH 52

@@ -58,7 +58,7 @@ Further requirements:
 - [ ] Battle.
 - [ ] Should there be persistence?
 - [x] Map tooling. I'm picturing we show the big image, and MacPaint pencil over it for physics.
-- [ ] Font replacement. Along the lines of Egg's API-wise, but Egg's is overkill.
+- [x] Font replacement. Along the lines of Egg's API-wise, but Egg's is overkill.
 
 - [ ] Proper map.
 - [ ] Proper graphics.
