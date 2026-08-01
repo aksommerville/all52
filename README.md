@@ -20,8 +20,14 @@ Further requirements:
  - 52x52 pixel framebuffer. Must be <=64, and hey the game's all about the number 52, innit?
  - 64x64 world of 8x8 pixel tiles.
  - Every world tile is unique. I'll make it as a single 512x512 pixel image. Write a script to validate uniqueness.
- - World physics are one bit per cell. Passable or vacant, no further detail needed.
+ - World physics are one bit per cell. Solid or vacant, no further detail needed.
+ - - Store binary. A plain 32 kB bitmap.
  - All movement quantizes to cells but present it fluidly. What we did in Spelling Bee was good.
+ - Vacant tiles must be of light colors only, and sprites should have dark edges.
+ - Can assume there won't be any doors or interiors.
+ - I think we can get by with just two images: World and Sprites.
+ - - Mmm yeah, but we'll probably need more for the modals. Possibly a separate Battle image too.
+ - - And we need a 3x5 font image, definitely.
 
 ## Agenda
 
@@ -43,3 +49,27 @@ Further requirements:
 - U 2026-08-16T07:00 Jam ends.
 
 ## TODO
+
+- [ ] Scratch graphics for world and Dot.
+- [ ] Modal, sprite, and map plumbing.
+- [ ] Hero movement.
+- [ ] Camera.
+- [ ] Battle triggers.
+- [ ] Battle.
+- [ ] Should there be persistence?
+- [ ] Map tooling. I'm picturing we show the big image, and MacPaint pencil over it for physics.
+- [ ] Font replacement. Along the lines of Egg's API-wise, but Egg's is overkill.
+
+- [ ] Proper map.
+- [ ] Proper graphics.
+- [ ] Music.
+- [ ] Sound effects.
+- [ ] Hello modal.
+- [ ] Game over modal.
+- [ ] Victory modal.
+- [ ] Dialogue.
+- [ ] Tile validator.
+- [ ] Landing page.
+
+After the jam.
+- [ ] Restore universal menu, in metadata.

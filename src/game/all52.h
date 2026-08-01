@@ -4,11 +4,11 @@
 #include "egg/egg.h"
 #include "util/stdlib/egg-stdlib.h"
 #include "util/graf/graf.h"
-#include "util/font/font.h"
 #include "util/res/res.h"
 #include "util/text/text.h"
 #include "egg_res_toc.h"
 #include "shared_symbols.h"
+#include "modal.h"
 
 #define FBW 52
 #define FBH 52

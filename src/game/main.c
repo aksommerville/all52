@@ -3,6 +3,7 @@
 struct g g={0};
 
 void egg_client_quit(int status) {
+  modals_quit();
 }
 
 int egg_client_init() {
@@ -20,8 +21,12 @@ int egg_client_init() {
   text_set_rom(g.rom,g.romc);
 
   srand_auto();
-
-  //TODO
+  
+  if (modals_init()<0) return -1;
+  //TODO should eventually be a "hello" modal
+  struct modal_args_world args={0};
+  struct modal *modal=modal_spawn(&modal_type_world,&args,sizeof(args));
+  if (!modal) return -1;
 
   return 0;
 }
@@ -30,11 +35,12 @@ void egg_client_notify(int k,int v) {
 }
 
 void egg_client_update(double elapsed) {
-  //TODO
+  int input=egg_input_get_one(0);
+  modals_update(elapsed,input);
 }
 
 void egg_client_render() {
   graf_reset(&g.graf);
-  //TODO
+  modals_render();
   graf_flush(&g.graf);
 }
