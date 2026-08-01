@@ -6,9 +6,6 @@
 #ifndef MODAL_H
 #define MODAL_H
 
-struct modal;
-struct modal_type;
-
 /* Global.
  ***********************************************************************************/
 

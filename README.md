@@ -21,7 +21,7 @@ Further requirements:
  - 64x64 world of 8x8 pixel tiles.
  - Every world tile is unique. I'll make it as a single 512x512 pixel image. Write a script to validate uniqueness.
  - World physics are one bit per cell. Solid or vacant, no further detail needed.
- - - Store binary. A plain 32 kB bitmap.
+ - - Store binary. A plain 512 byte bitmap.
  - All movement quantizes to cells but present it fluidly. What we did in Spelling Bee was good.
  - Vacant tiles must be of light colors only, and sprites should have dark edges.
  - Can assume there won't be any doors or interiors.
@@ -51,9 +51,9 @@ Further requirements:
 ## TODO
 
 - [ ] Scratch graphics for world and Dot.
-- [ ] Modal, sprite, and map plumbing.
-- [ ] Hero movement.
-- [ ] Camera.
+- [x] Modal, sprite, and map plumbing.
+- [x] Hero movement.
+- [x] Camera.
 - [ ] Battle triggers.
 - [ ] Battle.
 - [ ] Should there be persistence?
