@@ -74,7 +74,7 @@ void modal_del(struct modal *modal);
 struct modal *modal_new(const struct modal_type *type,const void *args,int argslen);
 
 extern const struct modal_type modal_type_world;
-//TODO battle
+extern const struct modal_type modal_type_battle;
 //TODO hello
 //TODO gameover
 //TODO victory
@@ -85,6 +85,12 @@ extern const struct modal_type modal_type_world;
  
 struct modal_args_world {
   int TODO;
+};
+
+void modal_world_get_sprite_render_position(int *x,int *y,const struct modal *modal,const struct sprite *sprite);
+
+struct modal_args_battle {
+  int hltx,hlty; // Framebuffer position to highlight where we originate, should be the center of the monster.
 };
  
 #endif

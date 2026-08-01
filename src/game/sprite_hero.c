@@ -54,6 +54,23 @@ static int hero_maybe_begin_walking(struct sprite *sprite,int dx,int dy) {
   if (SPRITE->inpeek) return 0; // OK to walk while peek'd, but not when actually holding the button.
   if ((nx<0)||(ny<0)||(nx>=MAPW)||(ny>=MAPH)) return 0;
   if (CKPH(nx,ny)) return 0;
+  
+  /* Is there a monster or other solid sprite here?
+   */
+  struct sprite **otherp;
+  int i=world_get_sprites(&otherp);
+  for (;i-->0;otherp++) {
+    struct sprite *other=*otherp;
+    if (other->defunct) continue;
+    if (!other->type->bump) continue;
+    int oqx=(int)other->x;
+    if (oqx!=nx) continue;
+    int oqy=(int)other->y;
+    if (oqy!=ny) continue;
+    if (!other->type->bump(other,sprite)) continue;
+    return 0;
+  }
+  
   SPRITE->qx=nx;
   SPRITE->qy=ny;
   SPRITE->walking=1;

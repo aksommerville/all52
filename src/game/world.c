@@ -36,6 +36,16 @@ int world_reset() {
     if (!hero) return -1;
   }
   
+  /* XXX Try a monster nearby.
+   */
+  {
+    struct sprite_args_monster args={
+      0,
+    };
+    struct sprite *monster=sprite_spawn(&sprite_type_monster,34.5,33.5,&args,sizeof(args));
+    if (!monster) return -1;
+  }
+  
   //TODO Spawn monsters randomly.
   //TODO Deal out the 52 cards.
   
@@ -74,7 +84,7 @@ void world_update(double elapsed,int input) {
   
   /* One pass of the layer sort.
    */
-  //TODO
+  //TODO Punt this a bit. We're not very sprite-heavy, and I think we might not even need sorting.
 }
 
 /* Spawn sprite.

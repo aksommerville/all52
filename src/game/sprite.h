@@ -35,6 +35,11 @@ struct sprite_type {
    * There is no default render. If you don't implement this hook, you're invisible.
    */
   void (*render)(struct sprite *sprite,int x,int y);
+  
+  /* React to the hero walking into me.
+   * Return nonzero to behave solid; player's walking is rejected.
+   */
+  int (*bump)(struct sprite *sprite,struct sprite *hero);
 };
 
 void sprite_del(struct sprite *sprite);

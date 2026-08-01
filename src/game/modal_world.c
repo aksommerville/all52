@@ -126,3 +126,13 @@ const struct modal_type modal_type_world={
   .update=_world_update,
   .render=_world_render,
 };
+
+/* Where is this sprite rendered?
+ */
+ 
+void modal_world_get_sprite_render_position(int *x,int *y,const struct modal *modal,const struct sprite *sprite) {
+  if (!modal||(modal->type!=&modal_type_world)) return;
+  if (!sprite) return;
+  *x=lround(sprite->x*NS_sys_tilesize)-MODAL->camx;
+  *y=lround(sprite->y*NS_sys_tilesize)-MODAL->camy;
+}

@@ -50,14 +50,14 @@ Further requirements:
 
 ## TODO
 
-- [ ] Scratch graphics for world and Dot.
+- [x] Scratch graphics for world and Dot.
 - [x] Modal, sprite, and map plumbing.
 - [x] Hero movement.
 - [x] Camera.
-- [ ] Battle triggers.
+- [x] Battle triggers.
 - [ ] Battle.
 - [ ] Should there be persistence?
-- [ ] Map tooling. I'm picturing we show the big image, and MacPaint pencil over it for physics.
+- [x] Map tooling. I'm picturing we show the big image, and MacPaint pencil over it for physics.
 - [ ] Font replacement. Along the lines of Egg's API-wise, but Egg's is overkill.
 
 - [ ] Proper map.
