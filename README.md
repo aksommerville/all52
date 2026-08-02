@@ -59,25 +59,30 @@ Actual:
 - [x] Camera.
 - [x] Battle triggers.
 - [x] Battle.
-- [ ] Should there be persistence?
+- [x] Should there be persistence? ...no. It plays pretty easy in one sitting. And I don't think there will be any high score worth saving.
 - [x] Map tooling. I'm picturing we show the big image, and MacPaint pencil over it for physics.
 - [x] Font replacement. Along the lines of Egg's API-wise, but Egg's is overkill.
 - [x] Pressing A to dismiss the battle causes the hero's peek to begin briefly. Black it out.
 - [x] Battle at DISBURSEMENT stage, it picked the wrong vertical positions when I had both a swap and a take.
-- [ ] Battle: After picking rank, focus should return to the suit row.
-- [ ] I think default rank to the first card too, not the "none".
+- [x] Battle: After picking rank, focus should return to the suit row.
+- [x] I think default rank to the first card too, not the "none".
 
-- [ ] How many monsters, and how many cards apiece?
+- [x] How many monsters, and how many cards apiece?
 - - Dot starts with 6, I like that number. Leaves 46 to distribute.
 - - Monster positions and hands will be random, but do keep the distribution fixed (by count at least).
 - - And not entirely random either. A given monster will appear in a certain region and have a hand of a certain size.
-- - Try: 10, 5,5, 4,4, 3,3,3, 2,2,2, 1,1,1 -- 14 monsters
+- - Try: 10, 5,5, 4,4, 3,3,3, 2,2,2, 1,1,1 -- 14 monsters. Seems to work good.
 
+- [ ] Monsters run away.
 - [ ] View hand, maybe by pressing B in the outer world?
 - [ ] Show card count always in outerworld.
 - [ ] Can we give some fanfare when a region is cleared?
+- - How about a ring of flags or something, around the region's edge.
 - [ ] Probably need some kind of guidance to the remaining monsters.
+- [ ] Extra juice after killing a monster.
 - [ ] Eliminate battle logging, once I'm comfortable with it.
+- [ ] Consider using two full-size images, one for roofs, and mark the roofed regions so it disappears when you're inside.
+- [ ] Figure out how we're giving the cross-game clue, and what our bonus is.
 - [ ] Proper map.
 - [ ] Proper graphics.
 - [ ] Music.

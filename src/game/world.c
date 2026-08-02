@@ -33,10 +33,20 @@ static int world_poprgn(int xlo,int ylo,int xhi,int yhi,int spritec,int cardc_pe
   int cellv[1024]; // Current scratch map, the largest region is 756 cells. (the monster zone, in the southwest)
   int cellc=0;
   int y=ylo; for (;y<=yhi;y++) {
+    const uint8_t *physics=g.physics+y*8+(xlo>>3);
+    uint8_t phmask=0x80>>(xlo&7);
     int x=xlo; for (;x<=xhi;x++) {
       if (cellc>=1024) break;
       if ((x==32)&&(y==32)) break; // Skip this one, where the hero goes. Easier than scanning sprites generically.
-      cellv[cellc++]=y*MAPW+x;
+      if (!((*physics)&phmask)) {
+        cellv[cellc++]=y*MAPW+x;
+      }
+      if (phmask==0x01) {
+        phmask=0x80;
+        physics++;
+      } else {
+        phmask>>=1;
+      }
     }
     if (cellc>=1024) break;
   }

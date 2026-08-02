@@ -4,6 +4,8 @@ struct sprite_monster {
   struct sprite hdr;
   uint64_t hand;
   uint8_t tileid;
+  double faceclock;
+  uint8_t xform;
 };
 
 #define SPRITE ((struct sprite_monster*)sprite)
@@ -22,6 +24,7 @@ static int _monster_init(struct sprite *sprite,const void *args,int argslen) {
     //TODO digest args
   }
   SPRITE->tileid=0x00; // I'm Dot if they forget to set this.
+  SPRITE->faceclock=((rand()&0xffff)/65535.0);
   return 0;
 }
 
@@ -29,6 +32,15 @@ static int _monster_init(struct sprite *sprite,const void *args,int argslen) {
  */
  
 static void _monster_update(struct sprite *sprite,double elapsed) {
+  // Turn to face the hero. But don't bother checking every frame; allow say a quarter second between polls.
+  if ((SPRITE->faceclock-=elapsed)<=0.0) {
+    SPRITE->faceclock+=0.250;
+    struct sprite *hero=world_get_hero();
+    if (hero) {
+      if (hero->x<sprite->x-0.250) SPRITE->xform=EGG_XFORM_XREV;
+      else if (hero->x>sprite->x+0.250) SPRITE->xform=0;
+    }
+  }
 }
 
 /* Bump.
@@ -59,6 +71,9 @@ static void monster_cb_battle(struct modal *modal) {
   } else {
     fprintf(stderr,"...thou hast done well in defeating the monster\n");//XXX
     sprite->defunct=1;
+    if (manhand==0x000fffffffffffffll) {
+      fprintf(stderr,"YOU GOT ALL FIFTY TWO!\n");//TODO
+    }
   }
 }
  
@@ -83,7 +98,7 @@ static int _monster_bump(struct sprite *sprite,struct sprite *hero) {
  */
  
 static void _monster_render(struct sprite *sprite,int x,int y) {
-  graf_tile(&g.graf,x,y,SPRITE->tileid,0);
+  graf_tile(&g.graf,x,y,SPRITE->tileid,SPRITE->xform);
 }
 
 /* Type definition.

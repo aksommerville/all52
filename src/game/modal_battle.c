@@ -346,8 +346,11 @@ static void battle_pick_suit(struct modal *modal) {
 }
 
 static void battle_pick_rank(struct modal *modal) {
+  if (MODAL->rankc<1) return;
   //TODO sound
   MODAL->picking_rank=1;
+  // Prefer to select the lowest rank, but not "none":
+  if ((MODAL->rankc>=2)&&(MODAL->rankv[0]<0)&&(MODAL->rankp==0)) MODAL->rankp=1;
 }
 
 /* WEST to cancel.
@@ -384,6 +387,7 @@ static void battle_activate(struct modal *modal) {
   }
   //TODO sound
   MODAL->pickv[MODAL->pickp]=MODAL->rankv[MODAL->rankp];
+  MODAL->picking_rank=0; // Return focus to the suit row.
   battle_maybe_confirm(modal);
 }
 
@@ -544,15 +548,6 @@ static void _battle_update(struct modal *modal,double elapsed,int input) {
     default: modal->defunct=1;
   }
   MODAL->pvinput=input;
-  
-  //XXX AUX2 to abort. It's safe to abort; monster will see the outcome as whatever we came in with, until disbursement.
-  if (input&EGG_BTN_AUX2) {
-    modal->defunct=1;
-    if (MODAL->cb) {
-      MODAL->cb(modal);
-      MODAL->cb=0;
-    }
-  }
 }
 
 /* Render, INTRO.
