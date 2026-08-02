@@ -86,7 +86,7 @@ Actual:
 - [ ] Game over modal.
 - [ ] Victory modal.
 - [ ] Dialogue.
-- [ ] Tile validator.
+- [x] Tile validator.
 - [ ] Landing page.
 
 After the jam.
