@@ -55,11 +55,13 @@ Further requirements:
 - [x] Hero movement.
 - [x] Camera.
 - [x] Battle triggers.
-- [ ] Battle.
+- [x] Battle.
 - [ ] Should there be persistence?
 - [x] Map tooling. I'm picturing we show the big image, and MacPaint pencil over it for physics.
 - [x] Font replacement. Along the lines of Egg's API-wise, but Egg's is overkill.
+- [x] Pressing A to dismiss the battle causes the hero's peek to begin briefly. Black it out.
 
+- [ ] Eliminate battle logging, once I'm comfortable with it.
 - [ ] Proper map.
 - [ ] Proper graphics.
 - [ ] Music.
@@ -73,3 +75,7 @@ Further requirements:
 
 After the jam.
 - [ ] Restore universal menu, in metadata.
+
+Expansion ideas, probably not in scope for the jam.
+- [ ] Play cards outside battle, like spells.
+- [ ] Monsters that play a different game with the same cards.

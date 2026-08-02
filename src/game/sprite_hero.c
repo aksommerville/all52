@@ -43,7 +43,8 @@ static int _hero_init(struct sprite *sprite,const void *args,int argslen) {
   }
   SPRITE->hand=//XXX
     bit_from_cardid(3)|
-    bit_from_cardid(44);
+    bit_from_cardid(44)|
+    0x0000000000001fffll;
   return 0;
 }
 

@@ -35,6 +35,7 @@ extern struct g {
   void *rom;
   int romc;
   struct graf graf;
+  int input_blackout;
   
   int texid_world;
   int texid_sprites;

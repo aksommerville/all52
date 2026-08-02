@@ -53,6 +53,12 @@ int hand_has_card(uint64_t hand,int cardid);
 int hand_has_suit(uint64_t hand,int suit);
 uint64_t hands_overlap(uint64_t a,uint64_t b);
 
+/* Add or remove card to hand.
+ * It's just a bitwise OR or complemented AND. But we check for OOB and any 64-bit weirdness.
+ */
+uint64_t hand_add_cardid(uint64_t hand,int cardid);
+uint64_t hand_remove_cardid(uint64_t hand,int cardid);
+
 /* Write cardid 0..51 into (cardidv), sorted, and return the count.
  * Or hand_from_cardlist() to reverse the process.
  */

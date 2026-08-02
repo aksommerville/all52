@@ -121,6 +121,13 @@ void egg_client_notify(int k,int v) {
 
 void egg_client_update(double elapsed) {
   int input=egg_input_get_one(0);
+  if (g.input_blackout) {
+    if (input&g.input_blackout) { // Await release, and call them off.
+      input&=~g.input_blackout;
+    } else { // OK, end of blackout.
+      g.input_blackout=0;
+    }
+  }
   modals_update(elapsed,input);
 }
 

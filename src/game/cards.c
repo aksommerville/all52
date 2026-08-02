@@ -82,6 +82,16 @@ uint64_t hands_overlap(uint64_t a,uint64_t b) {
   return a&b;
 }
 
+uint64_t hand_add_cardid(uint64_t hand,int cardid) {
+  if ((cardid<0)||(cardid>=52)) return hand;
+  return hand|(1ll<<cardid);
+}
+
+uint64_t hand_remove_cardid(uint64_t hand,int cardid) {
+  if ((cardid<0)||(cardid>=52)) return hand;
+  return hand&~(1ll<<cardid);
+}
+
 /* Card list to or from hand.
  */
 
