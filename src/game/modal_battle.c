@@ -64,6 +64,11 @@ struct modal_battle {
   int cpu_disbv[4];
   int man_disbv[4];
   
+  /* Same as (*_disbv) but indexed by suit.
+   */
+  int cpu_suit_disbv[4];
+  int man_suit_disbv[4];
+  
   /* Record keystrokes during INTRO, for cheat codes.
    */
   uint16_t cheatv[CHEAT_LIMIT];
@@ -245,11 +250,6 @@ static void battle_update_INTRO(struct modal *modal,double elapsed,int input) {
  */
  
 static void battle_player_ready(struct modal *modal) {
-  fprintf(stderr,"%s...\n",__func__);//XXX
-  fprintf(stderr,"    Heart: %2d\n",MODAL->pickv[0]);
-  fprintf(stderr,"  Diamond: %2d\n",MODAL->pickv[1]);
-  fprintf(stderr,"     Club: %2d\n",MODAL->pickv[2]);
-  fprintf(stderr,"    Spade: %2d\n",MODAL->pickv[3]);
   
   /* Just to be on the safe side, validate once more that the correct suit count is selected,
    * and that all selected cards are in fact in the player's hand.
@@ -449,6 +449,7 @@ static void battle_update_ALIGN(struct modal *modal,double elapsed,int input) {
       } else { // Man played higher rank.
         MODAL->cpu_disbv[i]=1;
       }
+      MODAL->cpu_suit_disbv[suit_from_cardid(cpucardid)]=MODAL->cpu_disbv[i];
       mancardid=MODAL->man_cardidv[i];
       cpucardid=battle_card_of_suit(MODAL->cpu_cardidv,MODAL->suitc,suit_from_cardid(mancardid));
       if (cpucardid<0) { // Man card unmatched.
@@ -458,6 +459,7 @@ static void battle_update_ALIGN(struct modal *modal,double elapsed,int input) {
       } else { // CPU wins.
         MODAL->man_disbv[i]=-1;
       }
+      MODAL->man_suit_disbv[suit_from_cardid(mancardid)]=MODAL->man_disbv[i];
     }
     
     /* Then go ahead and effect the disbursement, against our (cpu_hand,man_hand).
@@ -473,6 +475,11 @@ static void battle_update_ALIGN(struct modal *modal,double elapsed,int input) {
         MODAL->cpu_hand=hand_add_cardid(MODAL->cpu_hand,MODAL->man_cardidv[i]);
       }
     }
+    
+    fprintf(stderr,"cpu_disbv: %d,%d,%d,%d\n",MODAL->cpu_disbv[0],MODAL->cpu_disbv[1],MODAL->cpu_disbv[2],MODAL->cpu_disbv[3]);
+    fprintf(stderr,"man_disbv: %d,%d,%d,%d\n",MODAL->man_disbv[0],MODAL->man_disbv[1],MODAL->man_disbv[2],MODAL->man_disbv[3]);
+    fprintf(stderr,"cpu_suit_disbv: %d,%d,%d,%d\n",MODAL->cpu_suit_disbv[0],MODAL->cpu_suit_disbv[1],MODAL->cpu_suit_disbv[2],MODAL->cpu_suit_disbv[3]);
+    fprintf(stderr,"man_suit_disbv: %d,%d,%d,%d\n",MODAL->man_suit_disbv[0],MODAL->man_suit_disbv[1],MODAL->man_suit_disbv[2],MODAL->man_suit_disbv[3]);
   }
 }
 
@@ -737,18 +744,29 @@ static void battle_render_DISBURSE(struct modal *modal) {
     int cpuya=4;
     int manya=30;
     // Final vertical positions "yz" depend on disbursement.
+    // We must compare to this card's partner-suit disbursement, which is not necessarily the pair we're looking at.
     int cpuyz=cpuya;
-    int manyz=manya;
-    if (MODAL->cpu_disbv[cp]>0) {
-      if (MODAL->man_disbv[cp]<0) { // Swapped.
-        cpuyz=manya;
-        manyz=cpuya;
-      } else { // Man takes both.
+    if (MODAL->cpu_disbv[cp]<0) {
+      // CPU is keeping it. Cool.
+    } else {
+      int mandisb=MODAL->man_suit_disbv[suit_from_cardid(cpucardid)];
+      if (mandisb>0) { // Man takes both.
         cpuyz=11;
+      } else { // Must be a swap.
+        cpuyz=manya;
       }
-    } else if (MODAL->man_disbv[cp]<0) { // CPU takes both.
-      manyz=23;
-    } // else leave them where they are
+    }
+    int manyz=manya;
+    if (MODAL->man_disbv[cp]>0) {
+      // Man is keeping it. Cool.
+    } else {
+      int cpudisb=MODAL->cpu_suit_disbv[suit_from_cardid(mancardid)];
+      if (cpudisb<0) { // CPU takes both.
+        manyz=23;
+      } else { // Must be a swap.
+        manyz=cpuya;
+      }
+    }
     // Then interpolate according to elapsed time.
     int cpuy=lround(cpuya*(1.0-t)+cpuyz*t);
     int many=lround(manya*(1.0-t)+manyz*t);

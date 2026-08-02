@@ -48,6 +48,9 @@ Further requirements:
 - S 2026-08-15 Submit by EOD or die trying.
 - U 2026-08-16T07:00 Jam ends.
 
+Actual:
+- 2026-08-02T14:49: Completed battle and placement, so the game is technically complete, kind of. And it's fun! Just what I was going for.
+
 ## TODO
 
 - [x] Scratch graphics for world and Dot.
@@ -60,7 +63,20 @@ Further requirements:
 - [x] Map tooling. I'm picturing we show the big image, and MacPaint pencil over it for physics.
 - [x] Font replacement. Along the lines of Egg's API-wise, but Egg's is overkill.
 - [x] Pressing A to dismiss the battle causes the hero's peek to begin briefly. Black it out.
+- [x] Battle at DISBURSEMENT stage, it picked the wrong vertical positions when I had both a swap and a take.
+- [ ] Battle: After picking rank, focus should return to the suit row.
+- [ ] I think default rank to the first card too, not the "none".
 
+- [ ] How many monsters, and how many cards apiece?
+- - Dot starts with 6, I like that number. Leaves 46 to distribute.
+- - Monster positions and hands will be random, but do keep the distribution fixed (by count at least).
+- - And not entirely random either. A given monster will appear in a certain region and have a hand of a certain size.
+- - Try: 10, 5,5, 4,4, 3,3,3, 2,2,2, 1,1,1 -- 14 monsters
+
+- [ ] View hand, maybe by pressing B in the outer world?
+- [ ] Show card count always in outerworld.
+- [ ] Can we give some fanfare when a region is cleared?
+- [ ] Probably need some kind of guidance to the remaining monsters.
 - [ ] Eliminate battle logging, once I'm comfortable with it.
 - [ ] Proper map.
 - [ ] Proper graphics.

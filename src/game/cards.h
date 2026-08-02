@@ -70,6 +70,12 @@ uint64_t hand_from_cardlist(const uint8_t *cardidv,int cardidc);
  */
 uint64_t hand_pick_n(uint64_t hand,int suitc);
 
+/* Returns a subset of (hand) with exactly (n) bits set.
+ * Entirely random, not necessarily different suits.
+ * If you ask for more than available, we return (hand) exactly.
+ */
+uint64_t hand_deal_n(uint64_t hand,int n);
+
 /* Helper to log one line with a summary of the hand's content.
  */
 void hand_log(const char *cmt,uint64_t hand);

@@ -72,5 +72,6 @@ struct sprite_args_monster {
 
 uint64_t sprite_monster_get_hand(struct sprite *sprite);
 int sprite_monster_set_hand(struct sprite *sprite,uint64_t hand);
+int sprite_monster_set_tileid(struct sprite *sprite,uint8_t tileid);
 
 #endif

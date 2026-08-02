@@ -163,6 +163,30 @@ uint64_t hand_pick_n(uint64_t hand,int suitc) {
   return dst;
 }
 
+/* Simple dealing.
+ */
+ 
+uint64_t hand_deal_n(uint64_t hand,int n) {
+  if (n<1) return 0;
+  hand&=0x000fffffffffffffll;
+  int cardidv[52];
+  int cardidc=0;
+  int cardid=0;
+  uint64_t bit=1;
+  for (;bit<hand;bit<<=1,cardid++) {
+    if (hand&bit) cardidv[cardidc++]=cardid;
+  }
+  if (n>=cardidc) return hand;
+  uint64_t dst=0;
+  while (n-->0) {
+    int p=rand()%cardidc;
+    dst|=1ll<<cardidv[p];
+    cardidc--;
+    memmove(cardidv+p,cardidv+p+1,sizeof(int)*(cardidc-p));
+  }
+  return dst;
+}
+
 /* Log a hand for troubleshooting.
  */
  

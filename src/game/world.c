@@ -7,6 +7,7 @@
  
 static struct {
   int init;
+  uint64_t deck; // Only relevant during init.
   
   struct sprite *spritev[SPRITE_LIMIT];
   int spritec;
@@ -21,34 +22,86 @@ void world_quit() {
   memset(&world,0,sizeof(world));
 }
 
+/* Generate monsters within a given rectangle of the world.
+ * (xlo,ylo,xhi,yhi) are inclusive, in meters ie 0..63.
+ */
+ 
+static int world_poprgn(int xlo,int ylo,int xhi,int yhi,int spritec,int cardc_per,uint8_t tileid) {
+
+  /* Write a list of candidate cells.
+   */
+  int cellv[1024]; // Current scratch map, the largest region is 756 cells. (the monster zone, in the southwest)
+  int cellc=0;
+  int y=ylo; for (;y<=yhi;y++) {
+    int x=xlo; for (;x<=xhi;x++) {
+      if (cellc>=1024) break;
+      if ((x==32)&&(y==32)) break; // Skip this one, where the hero goes. Easier than scanning sprites generically.
+      cellv[cellc++]=y*MAPW+x;
+    }
+    if (cellc>=1024) break;
+  }
+  if (cellc<spritec) return -1;
+  
+  while (spritec-->0) {
+    int cellp=rand()%cellc;
+    int x=cellv[cellp]%MAPW;
+    y=cellv[cellp]/MAPW;
+    cellc--;
+    memmove(cellv+cellp,cellv+cellp+1,sizeof(int)*(cellc-cellp));
+    
+    struct sprite *sprite=sprite_spawn(&sprite_type_monster,x+0.5,y+0.5,0,0);
+    if (!sprite) return -1;
+    uint64_t hand=hand_deal_n(world.deck,cardc_per);
+    if (!hand) {
+      fprintf(stderr,"Out of cards!\n");
+      return -1;
+    }
+    world.deck&=~hand;
+    if (sprite_monster_set_hand(sprite,hand)<0) return -1;
+    if (sprite_monster_set_tileid(sprite,tileid++)<0) return -1;
+  }
+  return 0;
+}
+
+/* Generate the initial set of sprites, including dealing out the deck.
+ */
+ 
+static int world_populate() {
+  world.deck=0x000fffffffffffffll;
+  
+  /* Hero at a fixed point (the very middle).
+   */
+  struct sprite *hero=sprite_spawn(&sprite_type_hero,32.5,32.5,0,0);
+  if (!hero) return -1;
+  uint64_t herohand=hand_deal_n(world.deck,6);
+  world.deck&=~herohand;
+  if (sprite_hero_set_hand(hero,herohand)<0) return -1;
+  
+  /* The rest are random.
+   * A fixed set per region, and those regions and sets are defined right here.
+   */
+  if (world_poprgn( 3, 3,15,14,1,10,0x53)<0) return -1; // One witch with a ton of cards in the northwest.
+  if (world_poprgn(19, 2,61,16,2, 5,0x43)<0) return -1; // Man.
+  if (world_poprgn( 2,44,43,61,2, 4,0x33)<0) return -1; // Monsters.
+  if (world_poprgn(45,31,62,62,3, 3,0x23)<0) return -1; // Greater Mammals.
+  if (world_poprgn( 2,24,25,38,3, 2,0x13)<0) return -1; // Birds.
+  if (world_poprgn(33,19,43,42,3, 1,0x03)<0) return -1; // Rodents.
+  
+  if (world.deck) {
+    fprintf(stderr,"%s:%d:OOPS: Failed to deal out the whole deck.",__FILE__,__LINE__);
+    hand_log("remaining",world.deck);
+    return -1;
+  }
+  return 0;
+}
+
 /* Reset.
  */
  
 int world_reset() {
   world_quit();
   world.init=1;
-  
-  /* Hero starts dead center.
-   */
-  {
-    struct sprite_args_hero args={0};
-    struct sprite *hero=sprite_spawn(&sprite_type_hero,(MAPW>>1)+0.5,(MAPH>>1)+0.5,&args,sizeof(args));
-    if (!hero) return -1;
-  }
-  
-  /* XXX Try a monster nearby.
-   */
-  {
-    struct sprite_args_monster args={
-      0,
-    };
-    struct sprite *monster=sprite_spawn(&sprite_type_monster,34.5,33.5,&args,sizeof(args));
-    if (!monster) return -1;
-  }
-  
-  //TODO Spawn monsters randomly.
-  //TODO Deal out the 52 cards.
-  
+  if (world_populate()<0) return -1;
   return 0;
 }
 

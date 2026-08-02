@@ -3,6 +3,7 @@
 struct sprite_monster {
   struct sprite hdr;
   uint64_t hand;
+  uint8_t tileid;
 };
 
 #define SPRITE ((struct sprite_monster*)sprite)
@@ -20,7 +21,7 @@ static int _monster_init(struct sprite *sprite,const void *args,int argslen) {
   if (args&&(argslen==sizeof(struct sprite_args_monster))) {
     //TODO digest args
   }
-  SPRITE->hand=bit_from_cardid(14);//XXX
+  SPRITE->tileid=0x00; // I'm Dot if they forget to set this.
   return 0;
 }
 
@@ -39,7 +40,6 @@ static struct {
 } monster_battle_userdata={0};
 
 static void monster_cb_battle(struct modal *modal) {
-  fprintf(stderr,"%s\n",__func__);
   struct sprite *sprite=sprite_by_id(monster_battle_userdata.monsterid);
   struct sprite *hero=sprite_by_id(monster_battle_userdata.heroid);
   if (!sprite||!hero) {
@@ -83,7 +83,7 @@ static int _monster_bump(struct sprite *sprite,struct sprite *hero) {
  */
  
 static void _monster_render(struct sprite *sprite,int x,int y) {
-  graf_tile(&g.graf,x,y,0x03,0);//TODO
+  graf_tile(&g.graf,x,y,SPRITE->tileid,0);
 }
 
 /* Type definition.
@@ -110,5 +110,11 @@ uint64_t sprite_monster_get_hand(struct sprite *sprite) {
 int sprite_monster_set_hand(struct sprite *sprite,uint64_t hand) {
   if (!sprite||(sprite->type!=&sprite_type_monster)) return -1;
   SPRITE->hand=hand;
+  return 0;
+}
+
+int sprite_monster_set_tileid(struct sprite *sprite,uint8_t tileid) {
+  if (!sprite||(sprite->type!=&sprite_type_monster)) return -1;
+  SPRITE->tileid=tileid;
   return 0;
 }
