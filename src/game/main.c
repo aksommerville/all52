@@ -58,7 +58,7 @@ static int scan_resources() {
  */
  
 static int generate_card_images() {
-  int imgw=CARDW*53;
+  int imgw=CARDW*52;
   int imgh=CARDH;
   if ((g.texid_cards=egg_texture_new())<1) return -1;
   if (egg_texture_load_raw(g.texid_cards,imgw,imgh,imgw<<2,0,0)<0) return -1;
@@ -67,21 +67,17 @@ static int generate_card_images() {
   graf_set_output(&g.graf,g.texid_cards);
   graf_set_input(&g.graf,g.texid_sprites);
   int x=0,cardid=0;
-  for (;cardid<53;cardid++,x+=CARDW) {
-    if (cardid) {
-      graf_decal(&g.graf,x,0,11,96,CARDW,CARDH); // Background.
-      int rank=CARD_RANK(cardid);
-      int suit=CARD_SUIT(cardid);
-      int rankx=22+(rank-1)*5;
-      int ranky=96;
-      if (suit>=3) ranky+=5;
-      int suitx=22+(suit-1)*5;
-      int suity=106;
-      graf_decal(&g.graf,x+3,3,rankx,ranky,5,5);
-      graf_decal(&g.graf,x+3,10,suitx,suity,5,5);
-    } else {
-      graf_decal(&g.graf,x,0,0,96,CARDW,CARDH);
-    }
+  for (;cardid<52;cardid++,x+=CARDW) {
+    graf_decal(&g.graf,x,0,11,96,CARDW,CARDH); // Background.
+    int rank=rank_from_cardid(cardid);
+    int suit=suit_from_cardid(cardid);
+    int rankx=22+rank*5;
+    int ranky=96;
+    if (suit>=2) ranky+=5;
+    int suitx=22+suit*5;
+    int suity=106;
+    graf_decal(&g.graf,x+3,3,rankx,ranky,5,5);
+    graf_decal(&g.graf,x+3,10,suitx,suity,5,5);
   }
   graf_flush(&g.graf);
   return 0;

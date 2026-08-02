@@ -2,7 +2,7 @@
 
 struct sprite_monster {
   struct sprite hdr;
-  uint8_t hand[53];
+  uint64_t hand;
 };
 
 #define SPRITE ((struct sprite_monster*)sprite)
@@ -20,7 +20,7 @@ static int _monster_init(struct sprite *sprite,const void *args,int argslen) {
   if (args&&(argslen==sizeof(struct sprite_args_monster))) {
     //TODO digest args
   }
-  SPRITE->hand[0]=CARD_COMPOSE(2,8);//XXX
+  SPRITE->hand=bit_from_cardid(14);//XXX
   return 0;
 }
 
@@ -33,14 +33,49 @@ static void _monster_update(struct sprite *sprite,double elapsed) {
 /* Bump.
  */
  
+static struct {
+  int monsterid;
+  int heroid;
+} monster_battle_userdata={0};
+
+static void monster_cb_battle(struct modal *modal) {
+  fprintf(stderr,"%s\n",__func__);
+  struct sprite *sprite=sprite_by_id(monster_battle_userdata.monsterid);
+  struct sprite *hero=sprite_by_id(monster_battle_userdata.heroid);
+  if (!sprite||!hero) {
+    fprintf(stderr,
+      "%s:PANIC: Sprite not found after battle. monster:%d=>%p, hero:%d=>%p\n",
+      __func__,monster_battle_userdata.monsterid,sprite,monster_battle_userdata.heroid,hero
+    );
+    return;
+  }
+  uint64_t manhand=modal_battle_get_man_hand(modal);
+  uint64_t cpuhand=modal_battle_get_cpu_hand(modal);
+  hand_log("cpu after",cpuhand);
+  hand_log("man after",manhand);
+  sprite_hero_set_hand(hero,manhand);
+  if (SPRITE->hand=cpuhand) {
+    fprintf(stderr,"...monster is still alive. run away\n");//TODO
+  } else {
+    fprintf(stderr,"...thou hast done well in defeating the monster\n");//XXX
+    sprite->defunct=1;
+  }
+}
+ 
 static int _monster_bump(struct sprite *sprite,struct sprite *hero) {
+  monster_battle_userdata.monsterid=sprite->id;
+  monster_battle_userdata.heroid=hero->id;
   struct modal_args_battle args={
     .cpu_hand=SPRITE->hand,
     .man_hand=sprite_hero_get_hand(hero),
+    .cb=monster_cb_battle,
+    .userdata=&monster_battle_userdata,
   };
   modal_world_get_sprite_render_position(&args.hltx,&args.hlty,modal_topmost_of_type(&modal_type_world),sprite);
-  //TODO Tell the modal more about me.
   struct modal *modal=modal_spawn(&modal_type_battle,&args,sizeof(args));
+  if (!modal) {
+    fprintf(stderr,"%s: Spawing battle modal failed!\n",__func__);
+  }
   return 1;
 }
 
@@ -67,7 +102,13 @@ const struct sprite_type sprite_type_monster={
 /* Public accessors.
  */
 
-uint8_t *sprite_monster_get_hand(struct sprite *sprite) {
+uint64_t sprite_monster_get_hand(struct sprite *sprite) {
   if (!sprite||(sprite->type!=&sprite_type_monster)) return 0;
   return SPRITE->hand;
+}
+
+int sprite_monster_set_hand(struct sprite *sprite,uint64_t hand) {
+  if (!sprite||(sprite->type!=&sprite_type_monster)) return -1;
+  SPRITE->hand=hand;
+  return 0;
 }

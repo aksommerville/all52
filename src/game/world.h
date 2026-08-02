@@ -23,5 +23,6 @@ struct sprite *sprite_spawn(const struct sprite_type *type,double x,double y,con
  */
 struct sprite *world_get_hero();
 int world_get_sprites(struct sprite ***vppp);
+struct sprite *sprite_by_id(int spriteid);
 
 #endif

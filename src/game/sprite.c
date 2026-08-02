@@ -1,5 +1,7 @@
 #include "all52.h"
 
+static int spriteid_next=1;
+
 /* Delete.
  */
  
@@ -17,6 +19,8 @@ struct sprite *sprite_new(const struct sprite_type *type,double x,double y,const
   if (!sprite) return 0;
   
   sprite->type=type;
+  if (spriteid_next<1) spriteid_next=1; // Expect this to happen every few million years of play.
+  sprite->id=spriteid_next++;
   sprite->x=x;
   sprite->y=y;
   sprite->layer=100;

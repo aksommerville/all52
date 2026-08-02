@@ -13,6 +13,7 @@
 struct sprite {
   const struct sprite_type *type;
   int defunct;
+  int id; // Positive and unique across all time, unless 2 billion get spawned.
   double x,y; // In world meters ie 0..64 ish.
   int layer; // Hero at 100.
   int render_always; // Nonzero, we'll call (render) every frame. Zero, we call it when you're close to the camera.
@@ -62,12 +63,14 @@ void sprite_hero_input(struct sprite *sprite,int input);
  */
 int sprite_hero_get_peeking(double *px,double *py,const struct sprite *sprite);
 
-uint8_t *sprite_hero_get_hand(struct sprite *sprite);
+uint64_t sprite_hero_get_hand(struct sprite *sprite);
+int sprite_hero_set_hand(struct sprite *sprite,uint64_t hand);
 
 struct sprite_args_monster {
   int TODO;
 };
 
-uint8_t *sprite_monster_get_hand(struct sprite *sprite);
+uint64_t sprite_monster_get_hand(struct sprite *sprite);
+int sprite_monster_set_hand(struct sprite *sprite,uint64_t hand);
 
 #endif

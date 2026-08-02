@@ -120,3 +120,14 @@ int world_get_sprites(struct sprite ***vppp) {
   *vppp=world.spritev;
   return world.spritec;
 }
+
+struct sprite *sprite_by_id(int spriteid) {
+  struct sprite **p=world.spritev;
+  int i=world.spritec;
+  for (;i-->0;p++) {
+    struct sprite *sprite=*p;
+    if (sprite->defunct) continue; // Even if the ID matches, a defunct sprite pretends not to exist anymore.
+    if (sprite->id==spriteid) return sprite;
+  }
+  return 0;
+}
