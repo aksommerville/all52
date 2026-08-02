@@ -26,6 +26,28 @@ struct sprite_type;
 #define MAPW 64
 #define MAPH 64
 
+// For the full-size card images that show both suit and rank.
+#define CARDW 11
+#define CARDH 18
+
+/* Card values are zero for none, or 1..52 running suit-major with aces low.
+ * A hand is a sorted and zero-terminated array of uint8_t cards, so 53 bytes max.
+ * When suit and rank are supplied separately, they're both one-based.
+ * Suits are 1..4 = heart,diamond,club,spade. Tho game logic never needs to care which is which.
+ */
+static inline uint8_t CARD_COMPOSE(uint8_t suit,uint8_t rank) {
+  if ((suit<1)||(suit>4)||(rank<1)||(rank>13)) return 0;
+  return (suit-1)*13+rank;
+}
+static inline uint8_t CARD_SUIT(uint8_t card) {
+  if ((card<1)||(card>52)) return 0;
+  return 1+(card-1)/13;
+}
+static inline uint8_t CARD_RANK(uint8_t card) {
+  if ((card<1)||(card>52)) return 0;
+  return (card-1)%13+1;
+}
+
 extern struct g {
   void *rom;
   int romc;
@@ -34,6 +56,7 @@ extern struct g {
   int texid_world;
   int texid_sprites;
   int texid_font;
+  int texid_cards; // Generated at init from sprites.
   const uint8_t *physics; // LRTB big-endian, 1 bit per cell. 512 bytes.
 } g;
 

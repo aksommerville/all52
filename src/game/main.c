@@ -54,6 +54,39 @@ static int scan_resources() {
   return 0;
 }
 
+/* Using the composable bits in image:sprites, make a texture of 53 card images, 11x18 each.
+ */
+ 
+static int generate_card_images() {
+  int imgw=CARDW*53;
+  int imgh=CARDH;
+  if ((g.texid_cards=egg_texture_new())<1) return -1;
+  if (egg_texture_load_raw(g.texid_cards,imgw,imgh,imgw<<2,0,0)<0) return -1;
+  egg_texture_clear(g.texid_cards);
+  graf_reset(&g.graf);
+  graf_set_output(&g.graf,g.texid_cards);
+  graf_set_input(&g.graf,g.texid_sprites);
+  int x=0,cardid=0;
+  for (;cardid<53;cardid++,x+=CARDW) {
+    if (cardid) {
+      graf_decal(&g.graf,x,0,11,96,CARDW,CARDH); // Background.
+      int rank=CARD_RANK(cardid);
+      int suit=CARD_SUIT(cardid);
+      int rankx=22+(rank-1)*5;
+      int ranky=96;
+      if (suit>=3) ranky+=5;
+      int suitx=22+(suit-1)*5;
+      int suity=106;
+      graf_decal(&g.graf,x+3,3,rankx,ranky,5,5);
+      graf_decal(&g.graf,x+3,10,suitx,suity,5,5);
+    } else {
+      graf_decal(&g.graf,x,0,0,96,CARDW,CARDH);
+    }
+  }
+  graf_flush(&g.graf);
+  return 0;
+}
+
 /* Init.
  */
 
@@ -71,6 +104,7 @@ int egg_client_init() {
   egg_rom_get(g.rom,g.romc);
   text_set_rom(g.rom,g.romc);
   if (scan_resources()<0) return -1;
+  if (generate_card_images()<0) return -1;
 
   srand_auto();
   

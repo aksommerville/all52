@@ -91,6 +91,9 @@ void modal_world_get_sprite_render_position(int *x,int *y,const struct modal *mo
 
 struct modal_args_battle {
   int hltx,hlty; // Framebuffer position to highlight where we originate, should be the center of the monster.
+  // Both hands must be at least 53 bytes, and are mutable. We'll write the outcome here. Must initially contain at least one card each.
+  uint8_t *cpu_hand;
+  uint8_t *man_hand;
 };
  
 #endif

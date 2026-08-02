@@ -62,8 +62,12 @@ void sprite_hero_input(struct sprite *sprite,int input);
  */
 int sprite_hero_get_peeking(double *px,double *py,const struct sprite *sprite);
 
+uint8_t *sprite_hero_get_hand(struct sprite *sprite);
+
 struct sprite_args_monster {
   int TODO;
 };
+
+uint8_t *sprite_monster_get_hand(struct sprite *sprite);
 
 #endif

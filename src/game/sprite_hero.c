@@ -17,6 +17,7 @@ struct sprite_hero {
   double walkanimclock;
   int walkanimframe;
   double turnclock; // Counts down during a motion blackout due to turning. So we can change direction without changing position.
+  uint8_t hand[53];
 };
 
 #define SPRITE ((struct sprite_hero*)sprite)
@@ -40,6 +41,8 @@ static int _hero_init(struct sprite *sprite,const void *args,int argslen) {
   if (args&&(argslen==sizeof(struct sprite_args_hero))) {
     //TODO digest args
   }
+  SPRITE->hand[0]=CARD_COMPOSE(2,4);//XXX
+  SPRITE->hand[1]=CARD_COMPOSE(3,11);
   return 0;
 }
 
@@ -238,7 +241,7 @@ void sprite_hero_input(struct sprite *sprite,int input) {
   SPRITE->pvinput=input;
 }
 
-/* Read peek state.
+/* Public accessors.
  */
  
 int sprite_hero_get_peeking(double *px,double *py,const struct sprite *sprite) {
@@ -247,4 +250,9 @@ int sprite_hero_get_peeking(double *px,double *py,const struct sprite *sprite) {
   *px=SPRITE->peekmag*SPRITE->peekdx;
   *py=SPRITE->peekmag*SPRITE->peekdy;
   return 1;
+}
+
+uint8_t *sprite_hero_get_hand(struct sprite *sprite) {
+  if (!sprite||(sprite->type!=&sprite_type_hero)) return 0;
+  return SPRITE->hand;
 }

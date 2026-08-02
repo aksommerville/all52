@@ -2,6 +2,7 @@
 
 struct sprite_monster {
   struct sprite hdr;
+  uint8_t hand[53];
 };
 
 #define SPRITE ((struct sprite_monster*)sprite)
@@ -19,6 +20,7 @@ static int _monster_init(struct sprite *sprite,const void *args,int argslen) {
   if (args&&(argslen==sizeof(struct sprite_args_monster))) {
     //TODO digest args
   }
+  SPRITE->hand[0]=CARD_COMPOSE(2,8);//XXX
   return 0;
 }
 
@@ -32,7 +34,10 @@ static void _monster_update(struct sprite *sprite,double elapsed) {
  */
  
 static int _monster_bump(struct sprite *sprite,struct sprite *hero) {
-  struct modal_args_battle args={0};
+  struct modal_args_battle args={
+    .cpu_hand=SPRITE->hand,
+    .man_hand=sprite_hero_get_hand(hero),
+  };
   modal_world_get_sprite_render_position(&args.hltx,&args.hlty,modal_topmost_of_type(&modal_type_world),sprite);
   //TODO Tell the modal more about me.
   struct modal *modal=modal_spawn(&modal_type_battle,&args,sizeof(args));
@@ -43,7 +48,7 @@ static int _monster_bump(struct sprite *sprite,struct sprite *hero) {
  */
  
 static void _monster_render(struct sprite *sprite,int x,int y) {
-  graf_tile(&g.graf,x,y,0x80,0);//TODO
+  graf_tile(&g.graf,x,y,0x03,0);//TODO
 }
 
 /* Type definition.
@@ -58,3 +63,11 @@ const struct sprite_type sprite_type_monster={
   .render=_monster_render,
   .bump=_monster_bump,
 };
+
+/* Public accessors.
+ */
+
+uint8_t *sprite_monster_get_hand(struct sprite *sprite) {
+  if (!sprite||(sprite->type!=&sprite_type_monster)) return 0;
+  return SPRITE->hand;
+}
