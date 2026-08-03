@@ -76,7 +76,7 @@ Actual:
 - [ ] Monsters run away.
 - [ ] View hand, maybe by pressing B in the outer world?
 - [ ] Show card count always in outerworld.
-- [ ] Can we give some fanfare when a region is cleared?
+- [x] Can we give some fanfare when a region is cleared?
 - - How about a ring of flags or something, around the region's edge.
 - [ ] Probably need some kind of guidance to the remaining monsters.
 - [ ] Extra juice after killing a monster.

@@ -51,6 +51,7 @@ struct sprite *sprite_new(const struct sprite_type *type,double x,double y,const
 
 extern const struct sprite_type sprite_type_hero;
 extern const struct sprite_type sprite_type_monster;
+extern const struct sprite_type sprite_type_flag;
 
 struct sprite_args_hero {
   int TODO;
@@ -73,5 +74,12 @@ struct sprite_args_monster {
 uint64_t sprite_monster_get_hand(struct sprite *sprite);
 int sprite_monster_set_hand(struct sprite *sprite,uint64_t hand);
 int sprite_monster_set_tileid(struct sprite *sprite,uint8_t tileid);
+int sprite_monster_set_family(struct sprite *sprite,int family);
+int sprite_monster_get_family(const struct sprite *sprite);
+
+int sprite_flag_set_family(struct sprite *sprite,int family);
+int sprite_flag_get_family(const struct sprite *sprite);
+void sprite_flag_set_xform(struct sprite *sprite,uint8_t xform);
+void sprite_flag_refresh(); // Queries the globals, updates all flags.
 
 #endif
