@@ -75,10 +75,10 @@ struct modal *modal_new(const struct modal_type *type,const void *args,int argsl
 
 extern const struct modal_type modal_type_world;
 extern const struct modal_type modal_type_battle;
+extern const struct modal_type modal_type_dialogue; // Overlays world.
 //TODO hello
 //TODO gameover
 //TODO victory
-//TODO dialogue
 
 /* Species.
  ***************************************************************************/
@@ -100,5 +100,12 @@ struct modal_args_battle {
 void *modal_battle_get_userdata(const struct modal *modal);
 uint64_t modal_battle_get_cpu_hand(const struct modal *modal);
 uint64_t modal_battle_get_man_hand(const struct modal *modal);
+
+struct modal_args_dialogue {
+  int rid;
+  int strix;
+  const struct text_insertion *insv;
+  int insc;
+};
  
 #endif

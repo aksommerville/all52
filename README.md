@@ -77,7 +77,10 @@ Actual:
 - [x] Toll gates.
 - [ ] View hand, maybe by pressing B in the outer world?
 - [x] Show card count always in outerworld.
-- [ ] Two monsters ended up on top of each other, after adding flee.
+- [x] Two monsters ended up on top of each other, after adding flee.
+- - The logic looks sound and I haven't easily been able to reproduce it.
+- - I suspect both monsters were in motion at the same time. If that happened, the second one wouldn't know about the first's final position.
+- - But we can have it ask! The final position is at least known at that point.
 
 - [x] Play time is too long, and the world too big. Need a rethink of the initial shuffle.
 - - I'm taking 15 minutes to clear it, and that's knowing exactly what to do.
@@ -93,7 +96,7 @@ Actual:
 - - How about a ring of flags or something, around the region's edge.
 - [x] Probably need some kind of guidance to the remaining monsters.
 - [ ] Extra juice after killing a monster.
-- [ ] Eliminate battle logging, once I'm comfortable with it.
+- [x] Eliminate battle logging, once I'm comfortable with it.
 - [ ] Consider using two full-size images, one for roofs, and mark the roofed regions so it disappears when you're inside.
 - [ ] Figure out how we're giving the cross-game clue, and what our bonus is.
 - [ ] Proper map.
@@ -103,7 +106,7 @@ Actual:
 - [ ] Hello modal.
 - [ ] Game over modal.
 - [ ] Victory modal.
-- [ ] Dialogue.
+- [x] Dialogue.
 - [x] Tile validator.
 - [ ] Landing page.
 

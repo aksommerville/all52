@@ -18,14 +18,24 @@ static int _guard_init(struct sprite *sprite,const void *args,int argslen) {
 static int _guard_bump(struct sprite *sprite,struct sprite *hero) {
   int cardc=hand_count_cards(sprite_hero_get_hand(hero));
   if (cardc<SPRITE->limit) {
-    fprintf(stderr,"NOPE!\n");
+    struct text_insertion ins={.mode='i',.i=SPRITE->limit};
+    struct modal_args_dialogue args={
+      .rid=1,
+      .strix=24,
+      .insv=&ins,
+      .insc=1,
+    };
+    struct modal *modal=modal_spawn(&modal_type_dialogue,&args,sizeof(args));
     return 1;
   } else {
-    fprintf(stderr,"ok %d > %d\n",cardc,SPRITE->limit);
+    struct modal_args_dialogue args={
+      .rid=1,
+      .strix=25,
+    };
+    struct modal *modal=modal_spawn(&modal_type_dialogue,&args,sizeof(args));
     sprite->defunct=1;
-    return 0;
+    return 1;
   }
-  //TODO dialogue
 }
 
 static void _guard_render(struct sprite *sprite,int x,int y) {

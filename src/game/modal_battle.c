@@ -321,10 +321,10 @@ static void battle_adjust(struct modal *modal,int d) {
     if (MODAL->rankp<0) MODAL->rankp=MODAL->rankc-1;
     else if (MODAL->rankp>=MODAL->rankc) MODAL->rankp=0;
   } else {
-    // Suits are fixed, there's four of them. No wrapping.
+    // Suits are fixed, there's four of them. Do still wrap, because it's weird not to, when ranks do.
     MODAL->pickp+=d;
-    if (MODAL->pickp<0) MODAL->pickp=0;
-    else if (MODAL->pickp>3) MODAL->pickp=3;
+    if (MODAL->pickp<0) MODAL->pickp=3;
+    else if (MODAL->pickp>3) MODAL->pickp=0;
     battle_pick_changed(modal);
   }
 }

@@ -122,6 +122,15 @@ static int monster_check_flee_distance(struct sprite *sprite,int x,int y,int dx,
     struct sprite *other=*p;
     if (other->defunct) continue;
     if (other==sprite) continue; // this one's ok, i know him.
+    // If the other is a monster, use its final position instead.
+    // It's a little unusual, but not at all impossible, for two monsters to be in motion at once.
+    double ox=other->x,oy=other->y;
+    if (other->type==&sprite_type_monster) {
+      int oqx,oqy;
+      sprite_monster_get_resting_position(&oqx,&oqy,other);
+      ox=oqx+0.5;
+      oy=oqy+0.5;
+    }
     // Assume everything else is solid.
     if (other->x<bl) continue;
     if (other->x>br) continue;
@@ -325,5 +334,21 @@ int sprite_monster_set_hand(struct sprite *sprite,uint64_t hand) {
 int sprite_monster_set_tileid(struct sprite *sprite,uint8_t tileid) {
   if (!sprite||(sprite->type!=&sprite_type_monster)) return -1;
   SPRITE->tileid=tileid;
+  return 0;
+}
+
+/* Get resting position.
+ */
+
+int sprite_monster_get_resting_position(int *x,int *y,const struct sprite *sprite) {
+  if (!sprite||(sprite->type!=&sprite_type_monster)) return -1;
+  if (SPRITE->fleestepp<SPRITE->fleestepc) {
+    const struct fleestep *step=SPRITE->fleestepv+SPRITE->fleestepc-1;
+    *x=step->qx;
+    *y=step->qy;
+  } else {
+    *x=(int)sprite->x;
+    *y=(int)sprite->y;
+  }
   return 0;
 }

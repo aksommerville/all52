@@ -175,6 +175,9 @@ static int world_populate() {
   world.deck=0x000fffffffffffffll;
   world.family=1;
   
+  int seed=get_rand_seed();
+  fprintf(stderr,"Random seed 0x%08x\n",seed);
+  
   /* Hero at a fixed point (the very middle).
    */
   struct sprite *hero=sprite_spawn(&sprite_type_hero,32.5,32.5,0,0);

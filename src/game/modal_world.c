@@ -45,6 +45,11 @@ static int _world_init(struct modal *modal,const void *args,int argslen) {
  
 static void _world_focus(struct modal *modal,int focus) {
   //fprintf(stderr,"%s %p %d\n",__func__,modal,focus);
+  if (focus) {
+  } else {
+    // eg dialogue appearing over me. restart the blackout.
+    modal->input_blackout=1;
+  }
 }
 
 /* Update.

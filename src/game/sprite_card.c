@@ -23,14 +23,27 @@ static int _card_init(struct sprite *sprite,const void *args,int argslen) {
  
 static int _card_bump(struct sprite *sprite,struct sprite *hero) {
   uint64_t herohand=sprite_hero_get_hand(hero);
-  hand_log("hero before card",herohand);
-  hand_log("card hand",SPRITE->hand);
   herohand|=SPRITE->hand;
-  hand_log("hero after picking up",herohand);
   sprite_hero_set_hand(hero,herohand);
   sprite->defunct=1;
-  //TODO fanfare
-  return 0;
+  //TODO sound
+  //TODO Maybe instead of a text dialogue, show the card image with some woo-woo graphics behind it?
+  int cardid=cardid_from_bit(SPRITE->hand);
+  int rank=rank_from_cardid(cardid);
+  int suit=suit_from_cardid(cardid);
+  if ((rank<0)||(suit<0)) return 0;
+  struct text_insertion insv[]={
+    {.mode='r',.r={.rid=1,.strix=10+rank}},
+    {.mode='r',.r={.rid=1,.strix=6+suit}},
+  };
+  struct modal_args_dialogue args={
+    .rid=1,
+    .strix=23,
+    .insv=insv,
+    .insc=2,
+  };
+  struct modal *modal=modal_spawn(&modal_type_dialogue,&args,sizeof(args));
+  return 1;
 }
 
 /* Render.
