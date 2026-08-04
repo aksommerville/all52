@@ -67,6 +67,7 @@ int sprite_hero_get_peeking(double *px,double *py,const struct sprite *sprite);
 
 uint64_t sprite_hero_get_hand(struct sprite *sprite);
 int sprite_hero_set_hand(struct sprite *sprite,uint64_t hand);
+void sprite_hero_set_blackout(struct sprite *sprite,double s); // No movement for so long. For when monsters flee.
 
 struct sprite_args_monster {
   int TODO;

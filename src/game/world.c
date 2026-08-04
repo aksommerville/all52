@@ -185,13 +185,13 @@ static int world_populate() {
    * 32 cards.
    */
   if (world_poprgn(47,26,55,33, 1,10,0x33)<0) return -1; // Witch's castle.
-  if (world_poprgn( 1,52,12,62, 2, 4,0x13)<0) return -1; // SW island. Birds.
+  if (world_poprgn( 1,52,12,62, 2, 3,0x13)<0) return -1; // SW island. Birds.
   if (world_poprgn(15,49,29,61, 2, 1,0x03)<0) return -1; // Donut island. Rodents.
   if (world_poprgn(32,52,62,62, 2, 6,0x23)<0) return -1; // SE island. Mammals.
   
   /* Spawning free cards is the same idea as monsters.
    */
-  if (world_freergn( 3, 2,19,32, 3)<0) return -1; // NW island.
+  if (world_freergn( 3, 2,19,32, 5)<0) return -1; // NW island.
   if (world_freergn(22, 3,47,18, 4)<0) return -1; // North end of big island.
   if (world_freergn(51, 1,62,10, 4)<0) return -1; // NE island.
   if (world_freergn(46,14,62,22, 3)<0) return -1; // ENE peninsula.
@@ -199,7 +199,7 @@ static int world_populate() {
 
   //TODO Guards:
   // 34,25 req=10
-  // 43,37 req=30
+  // 43,37 req=20
   // 53,14 req=40
   
   if (world.deck) {

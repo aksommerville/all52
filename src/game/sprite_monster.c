@@ -1,11 +1,24 @@
 #include "all52.h"
 
+/* After surviving a battle, we'll run up to so many turns away.
+ * It's normal to terminate before that too.
+ */
+#define FLEESTEP_LIMIT 5
+
 struct sprite_monster {
   struct sprite hdr;
   uint64_t hand;
   uint8_t tileid;
   double faceclock;
   uint8_t xform;
+  
+  struct fleestep {
+    double x,y;
+    int qx,qy;
+    double dx,dy; // Speed baked in.
+  } fleestepv[FLEESTEP_LIMIT];
+  int fleestepc;
+  int fleestepp;
 };
 
 #define SPRITE ((struct sprite_monster*)sprite)
@@ -32,6 +45,30 @@ static int _monster_init(struct sprite *sprite,const void *args,int argslen) {
  */
  
 static void _monster_update(struct sprite *sprite,double elapsed) {
+
+  /* If fleeing, it's something quite different.
+   * Follow the predetermined plan.
+   * Our speed and head start is such that the hero can't catch us, and nothing else should be moving.
+   */
+  if (SPRITE->fleestepp<SPRITE->fleestepc) {
+    struct fleestep *step=SPRITE->fleestepv+SPRITE->fleestepp;
+    sprite->x+=step->dx*elapsed;
+    sprite->y+=step->dy*elapsed;
+    int done=0;
+         if (step->dx<0.0) { done=(sprite->x<=step->x); SPRITE->xform=EGG_XFORM_XREV; }
+    else if (step->dx>0.0) { done=(sprite->x>=step->x); SPRITE->xform=0; }
+    else if (step->dy<0.0) done=(sprite->y<=step->y);
+    else if (step->dy>0.0) done=(sprite->y>=step->y);
+    else done=1;
+    if (done) {
+      sprite->x=step->x;
+      sprite->y=step->y;
+      SPRITE->fleestepp++;
+    }
+    //TODO animation?
+    return;
+  }
+
   // Turn to face the hero. But don't bother checking every frame; allow say a quarter second between polls.
   if ((SPRITE->faceclock-=elapsed)<=0.0) {
     SPRITE->faceclock+=0.250;
@@ -40,6 +77,151 @@ static void _monster_update(struct sprite *sprite,double elapsed) {
       if (hero->x<sprite->x-0.250) SPRITE->xform=EGG_XFORM_XREV;
       else if (hero->x>sprite->x+0.250) SPRITE->xform=0;
     }
+  }
+}
+
+/* How far can a monster at (x,y) travel along the unit vector (dx,dy)?
+ * If cell (x,y) itself is solid, we won't notice.
+ */
+ 
+static int monster_check_flee_distance(struct sprite *sprite,int x,int y,int dx,int dy) {
+  if ((x<0)||(y<0)||(x>=MAPW)||(y>=MAPH)) return 0;
+  if (dx&&dy) return 0;
+  if (!dx&&!dy) return 0;
+  
+  /* First measure only by the map, that much is super easy.
+   */
+  int fx=x,fy=y,d=0;
+  for (;;) {
+    int nx=fx+dx;
+    int ny=fy+dy;
+    if ((nx<0)||(ny<0)||(nx>=MAPW)||(ny>=MAPH)) break;
+    if (CKPH(nx,ny)) break;
+    fx=nx;
+    fy=ny;
+    d++;
+  }
+  
+  /* Prepare a box for comparing other sprites to.
+   */
+  double bl=x+0.250;
+  double br=x+0.750;
+  double bt=y+0.250;
+  double bb=y+0.750;
+       if (dx<0) bl=fx+0.250;
+  else if (dx>0) br=fx+0.750;
+  else if (dy<0) bt=fy+0.250;
+  else if (dy>0) bb=fy+0.750;
+  else return 0;
+  
+  /* If we find a solid sprite in the box, truncate.
+   */
+  struct sprite **p;
+  int i=world_get_sprites(&p);
+  for (;i-->0;p++) {
+    struct sprite *other=*p;
+    if (other->defunct) continue;
+    if (other==sprite) continue; // this one's ok, i know him.
+    // Assume everything else is solid.
+    if (other->x<bl) continue;
+    if (other->x>br) continue;
+    if (other->y<bt) continue;
+    if (other->y>bb) continue;
+    int oqx=(int)other->x;
+    int oqy=(int)other->y;
+         if (dx<0) { fx=oqx+1; bl=fx+0.250; d=x-fx; }
+    else if (dx>0) { fx=oqx-1; br=fx+0.750; d=fx-x; }
+    else if (dy<0) { fy=oqy+1; bt=fy+0.250; d=y-fy; }
+    else if (dy>0) { fy=oqy-1; bb=fy+0.750; d=fy-y; }
+    else d=0;
+    if (d<1) return 0;
+  }
+  
+  return d;
+}
+
+/* I've just survived a battle.
+ * Start running away.
+ */
+ 
+static void monster_flee(struct sprite *sprite,struct sprite *hero) {
+  sprite_hero_set_blackout(hero,0.500); // Not long, just give us a wee head start.
+  SPRITE->fleestepp=SPRITE->fleestepc=0;
+  
+  /* The broad idea:
+   *  - Check how far from the pointer we can travel in each of the cardinal directions.
+   *  - - Need to respect other sprites as well as the map.
+   *  - Pick one direction randomly, weighted by length. Or square of length? Strongly favor the longest direction.
+   *  - - Debatable: Nix the one or two directions that travel toward the hero.
+   *  - Pick a random nonzero distance along that line. If it's long enough, restrict to the far half.
+   *  - Repeat until whatever. If we end up not fleeing at all, it's not the end of the world.
+   */
+  int sqx=(int)sprite->x;
+  int sqy=(int)sprite->y;
+  int hqx=(int)hero->x;
+  int hqy=(int)hero->y;
+  while (SPRITE->fleestepc<FLEESTEP_LIMIT) {
+    struct candidate {
+      int dx,dy;
+      int distance;
+      int weight;
+    } candidatev[4];
+    int candidatec=0;
+    int wsum=0;
+    #define CK(_dx,_dy) { \
+      struct candidate *c=candidatev+candidatec; \
+      /* Debatable: Ignore the 1 or 2 directions that go toward the hero. */ \
+      if ((hqx<sqx)&&(_dx<0)) ; \
+      else if ((hqx>sqx)&&(_dx>0)) ; \
+      else if ((hqy<sqy)&&(_dy<0)) ; \
+      else if ((hqy>sqy)&&(_dy>0)) ; \
+      else { /* OK re hero. Check the available distance. */ \
+        c->distance=monster_check_flee_distance(sprite,sqx,sqy,_dx,_dy); \
+        if (c->distance>0) { \
+          c->dx=_dx; \
+          c->dy=_dy; \
+          c->weight=c->distance*c->distance; \
+          wsum+=c->weight; \
+          candidatec++; \
+        } \
+      } \
+    }
+    CK(-1,0)
+    CK(1,0)
+    CK(0,-1)
+    CK(0,1)
+    #undef CK
+    if (candidatec<1) break; // We must be cornered. No worries, just stop here.
+    int choice=rand()%wsum;
+    struct candidate *c=0;
+    struct candidate *ci=candidatev;
+    int i=candidatec;
+    for (;i-->0;ci++) {
+      if ((choice-=ci->weight)<0) {
+        c=ci;
+        break;
+      }
+    }
+    if (!c) break; // oops
+    // Direction is chosen. Now, if it's longer than say 3 meters, pick a distance in the upper half. Otherwise take all of it.
+    int d;
+    if (c->distance>3) {
+      int nope=c->distance>>1;
+      d=nope+rand()%(c->distance-nope);
+    } else {
+      d=c->distance;
+    }
+    // Append to (fleepstepv) and update (sqx,sqy).
+    const double speed=7.0; // m/s. The hero's speed is 6.0 and we should be just a little faster.
+    struct fleestep *step=SPRITE->fleestepv+SPRITE->fleestepc++;
+    step->dx=c->dx*speed;
+    step->dy=c->dy*speed;
+    step->qx=sqx+c->dx*d;
+    step->qy=sqy+c->dy*d;
+    step->x=step->qx+0.5;
+    step->y=step->qy+0.5;
+    sqx=step->qx;
+    sqy=step->qy;
   }
 }
 
@@ -66,18 +248,26 @@ static void monster_cb_battle(struct modal *modal) {
   hand_log("cpu after",cpuhand);
   hand_log("man after",manhand);
   sprite_hero_set_hand(hero,manhand);
-  if (SPRITE->hand=cpuhand) {
-    fprintf(stderr,"...monster is still alive. run away\n");//TODO
+  SPRITE->hand=cpuhand;
+  if (!manhand) { // Hero cleaned out!
+    fprintf(stderr,"Lost all the cards!\n");//TODO game over
+  } else if (cpuhand) {
+    monster_flee(sprite,hero);
   } else {
-    fprintf(stderr,"...thou hast done well in defeating the monster\n");//XXX
+    fprintf(stderr,"...thou hast done well in defeating the monster\n");//TODO fanfare. maybe soulballs?
     sprite->defunct=1;
     if (manhand==0x000fffffffffffffll) {
-      fprintf(stderr,"YOU GOT ALL FIFTY TWO!\n");//TODO
+      fprintf(stderr,"YOU GOT ALL FIFTY TWO!\n");//TODO launch modal
     }
   }
 }
  
 static int _monster_bump(struct sprite *sprite,struct sprite *hero) {
+
+  /* It shouldn't be possible, but if the hero catches up with us while fleeing, make her wait.
+   */
+  if (SPRITE->fleestepp<SPRITE->fleestepc) return 1;
+
   monster_battle_userdata.monsterid=sprite->id;
   monster_battle_userdata.heroid=hero->id;
   struct modal_args_battle args={
@@ -86,7 +276,7 @@ static int _monster_bump(struct sprite *sprite,struct sprite *hero) {
     .cb=monster_cb_battle,
     .userdata=&monster_battle_userdata,
   };
-  if (!args.man_hand) {
+  if (!args.man_hand) { // Not sure whether this will be possible. But do keep this clause at least as a safety; do not try to enter battle!
     fprintf(stderr,"%s:%d:TODO: Reject battle due to no cards.\n",__FILE__,__LINE__);//TODO dialogue or something. mind that this retriggers instantly if we don't go modal.
     return 1;
   }

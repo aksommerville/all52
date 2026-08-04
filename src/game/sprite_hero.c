@@ -18,6 +18,7 @@ struct sprite_hero {
   int walkanimframe;
   double turnclock; // Counts down during a motion blackout due to turning. So we can change direction without changing position.
   uint64_t hand;
+  double blackout;
 };
 
 #define SPRITE ((struct sprite_hero*)sprite)
@@ -86,6 +87,14 @@ static int hero_maybe_begin_walking(struct sprite *sprite,int dx,int dy) {
  
 static void _hero_update(struct sprite *sprite,double elapsed) {
 
+  /* Blackout?
+   */
+  int nomotion=0;
+  if (SPRITE->blackout>0.0) {
+    SPRITE->blackout-=elapsed;
+    nomotion=1;
+  }
+
   /* Extend or withdraw peek.
    */
   if (SPRITE->inpeek) {
@@ -134,8 +143,10 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
   } else if ((SPRITE->indx||SPRITE->indy)&&(SPRITE->turnclock<=0.0)) {
     SPRITE->walkanimclock=0.0;
     SPRITE->walkanimframe=0;
-    if (SPRITE->indx) hero_maybe_begin_walking(sprite,SPRITE->indx,0);
-    if (!SPRITE->walking&&SPRITE->indy) hero_maybe_begin_walking(sprite,0,SPRITE->indy);
+    if (!nomotion) {
+      if (SPRITE->indx) hero_maybe_begin_walking(sprite,SPRITE->indx,0);
+      if (!SPRITE->walking&&SPRITE->indy) hero_maybe_begin_walking(sprite,0,SPRITE->indy);
+    }
   }
   
   /* Turn clock ticks down whenever positive.
@@ -259,4 +270,9 @@ int sprite_hero_set_hand(struct sprite *sprite,uint64_t hand) {
   if (!sprite||(sprite->type!=&sprite_type_hero)) return -1;
   SPRITE->hand=hand;
   return 0;
+}
+
+void sprite_hero_set_blackout(struct sprite *sprite,double s) {
+  if (!sprite||(sprite->type!=&sprite_type_hero)) return;
+  SPRITE->blackout=s;
 }

@@ -73,7 +73,8 @@ Actual:
 - - And not entirely random either. A given monster will appear in a certain region and have a hand of a certain size.
 - - Try: 10, 5,5, 4,4, 3,3,3, 2,2,2, 1,1,1 -- 14 monsters. Seems to work good.
 
-- [ ] Monsters run away.
+- [x] Monsters run away.
+- [ ] Toll gates.
 - [ ] View hand, maybe by pressing B in the outer world?
 - [x] Show card count always in outerworld.
 
