@@ -41,10 +41,6 @@ static int _hero_init(struct sprite *sprite,const void *args,int argslen) {
   if (args&&(argslen==sizeof(struct sprite_args_hero))) {
     //TODO digest args
   }
-  SPRITE->hand=//XXX
-    bit_from_cardid(3)|
-    bit_from_cardid(44)|
-    0x0000000000001fffll;
   return 0;
 }
 

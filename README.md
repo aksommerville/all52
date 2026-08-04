@@ -75,10 +75,21 @@ Actual:
 
 - [ ] Monsters run away.
 - [ ] View hand, maybe by pressing B in the outer world?
-- [ ] Show card count always in outerworld.
+- [x] Show card count always in outerworld.
+
+- [x] Play time is too long, and the world too big. Need a rethink of the initial shuffle.
+- - I'm taking 15 minutes to clear it, and that's knowing exactly what to do.
+- - My time should be consistently under 10 minutes. I'd feel better with about 5.
+- - ...7 minutes, after eliminating the NW island.
+- - ...with free cards placed, it's more like 10 minutes. ok, still close enough.
+- - [x] Arrange the world with a big central no-combat zone, and four smaller combat zones peripheral to it.
+- - [x] Place a bunch of free cards all around the world initially.
+- - [x] Maybe start without any cards? ...yeah i like that
+
+- [x] Instead of the flag borders, can we put a region-completion indicator in the status bar? And include free-card regions too.
 - [x] Can we give some fanfare when a region is cleared?
 - - How about a ring of flags or something, around the region's edge.
-- [ ] Probably need some kind of guidance to the remaining monsters.
+- [x] Probably need some kind of guidance to the remaining monsters.
 - [ ] Extra juice after killing a monster.
 - [ ] Eliminate battle logging, once I'm comfortable with it.
 - [ ] Consider using two full-size images, one for roofs, and mark the roofed regions so it disappears when you're inside.

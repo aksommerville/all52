@@ -10,6 +10,8 @@
 struct modal_world {
   struct modal hdr;
   int camx,camy; // Most recent scroll position in world pixels (NB not meters). Top left.
+  int cardc_texid,cardc_w,cardc_h; // Text texture showing the card count.
+  int cardc_visible; // The card count we're displaying, so we can detect changes.
 };
 
 #define MODAL ((struct modal_world*)modal)
@@ -18,6 +20,7 @@ struct modal_world {
  */
  
 static void _world_del(struct modal *modal) {
+  egg_texture_del(MODAL->cardc_texid);
 }
 
 /* Init.
@@ -27,6 +30,7 @@ static int _world_init(struct modal *modal,const void *args,int argslen) {
 
   modal->interactive=1;
   modal->opaque=1;
+  MODAL->cardc_visible=-1;
 
   if (!args||(argslen!=sizeof(struct modal_args_world))) return -1;
   //TODO digest args
@@ -109,9 +113,35 @@ static void _world_render(struct modal *modal) {
     y-=camy;
     sprite->type->render(sprite,x,y);
   }
-
-  //TODO weather etc?
-  //TODO overlay?
+  
+  /* Refresh card-count texture if necessary.
+   */
+  if (hero) {
+    int cardc=hand_count_cards(sprite_hero_get_hand(hero));
+    if (cardc!=MODAL->cardc_visible) {
+      MODAL->cardc_visible=cardc;
+      egg_texture_del(MODAL->cardc_texid);
+      char text[2];
+      int textc=0;
+      if (cardc>=10) text[textc++]='0'+cardc/10;
+      text[textc++]='0'+cardc%10;
+      MODAL->cardc_texid=font_render_multiline(text,textc,FBW,0xffffffff,0);
+      egg_texture_get_size(&MODAL->cardc_w,&MODAL->cardc_h,MODAL->cardc_texid);
+    }
+  }
+  
+  /* Top bar overlay.
+   */
+  int region_complete=world_describe_local_completion();
+  if (region_complete) {
+    if (region_complete>0) {
+      graf_decal(&g.graf,0,0,49,106,7,5);
+    } else {
+      graf_decal(&g.graf,0,0,42,106,7,5);
+    }
+  }
+  graf_set_input(&g.graf,MODAL->cardc_texid);
+  graf_decal(&g.graf,8,0,0,0,MODAL->cardc_w,MODAL->cardc_h);
 }
 
 /* Type definition.

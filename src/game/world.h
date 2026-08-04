@@ -25,4 +25,11 @@ struct sprite *world_get_hero();
 int world_get_sprites(struct sprite ***vppp);
 struct sprite *sprite_by_id(int spriteid);
 
+/* Returns one of:
+ *  +1: We're in a completable region and it's been completed.
+ *   0: We're not in a completable region. Crossing a bridge or something.
+ *  -1: We're in a completable region and it's still pending.
+ */
+int world_describe_local_completion();
+
 #endif

@@ -3,7 +3,8 @@
 /* Globals.
  */
  
-#define SPRITE_LIMIT 1024
+#define SPRITE_LIMIT 64
+#define REGION_LIMIT 16
  
 static struct {
   int init;
@@ -13,6 +14,15 @@ static struct {
   
   struct sprite *spritev[SPRITE_LIMIT];
   int spritec;
+  
+  /* Region index is "family".
+   * Slot zero is unused.
+   */
+  struct region {
+    int xlo,ylo,xhi,yhi; // In world meters, inclusive.
+    int done; // Goes nonzero when we first detect the cards and monsters are gone, so we don't need to check again after.
+  } regionv[REGION_LIMIT];
+  int herofamily; // Which region the hero was in last, so we don't have to check all of them except when she leaves.
   
 } world={0};
 
@@ -39,15 +49,78 @@ static int cell_present(const int *v,int c,int q) {
   return 0;
 }
 
+/* Generate free cards within a given rectangle of the world.
+ * (xlo,ylo,xhi,yhi) are inclusive, in meters ie 0..63.
+ */
+ 
+static int world_freergn(int xlo,int ylo,int xhi,int yhi,int spritec) {
+  //fprintf(stderr,"freergn size %d\n",(xhi-xlo+1)*(yhi-ylo+1));
+  if (world.family<REGION_LIMIT) {
+    world.regionv[world.family]=(struct region){xlo,ylo,xhi,yhi};
+  }
+
+  /* Write a list of candidate cells.
+   */
+  int cellv[1024];
+  int cellc=0;
+  int y=ylo; for (;y<=yhi;y++) {
+    const uint8_t *physics=g.physics+y*8+(xlo>>3);
+    uint8_t phmask=0x80>>(xlo&7);
+    int x=xlo; for (;x<=xhi;x++) {
+      if (cellc>=1024) break;
+      if ((x==32)&&(y==32)) break; // Skip this one, where the hero goes. Easier than scanning sprites generically.
+      if (!((*physics)&phmask)) {
+        cellv[cellc++]=y*MAPW+x;
+      }
+      if (phmask==0x01) {
+        phmask=0x80;
+        physics++;
+      } else {
+        phmask>>=1;
+      }
+    }
+    if (cellc>=1024) break;
+  }
+  if (cellc<spritec) return -1;
+  
+  /* Generate cards.
+   */
+  while (spritec-->0) {
+    int cellp=rand()%cellc;
+    int x=cellv[cellp]%MAPW;
+    y=cellv[cellp]/MAPW;
+    cellc--;
+    memmove(cellv+cellp,cellv+cellp+1,sizeof(int)*(cellc-cellp));
+    
+    struct sprite *sprite=sprite_spawn(&sprite_type_card,x+0.5,y+0.5,0,0);
+    if (!sprite) return -1;
+    uint64_t hand=hand_deal_n(world.deck,1);
+    if (!hand) {
+      fprintf(stderr,"Out of cards!\n");
+      return -1;
+    }
+    world.deck&=~hand;
+    if (sprite_card_set_hand(sprite,hand)<0) return -1;
+    sprite->family=world.family;
+  }
+  
+  world.family++;
+  return 0;
+}
+
 /* Generate monsters within a given rectangle of the world.
  * (xlo,ylo,xhi,yhi) are inclusive, in meters ie 0..63.
  */
  
 static int world_poprgn(int xlo,int ylo,int xhi,int yhi,int spritec,int cardc_per,uint8_t tileid) {
+  //fprintf(stderr,"poprgn size %d\n",(xhi-xlo+1)*(yhi-ylo+1));
+  if (world.family<REGION_LIMIT) {
+    world.regionv[world.family]=(struct region){xlo,ylo,xhi,yhi};
+  }
 
   /* Write a list of candidate cells.
    */
-  int cellv[1024]; // Current scratch map, the largest region is 756 cells. (the monster zone, in the southwest)
+  int cellv[1024];
   int cellc=0;
   int y=ylo; for (;y<=yhi;y++) {
     const uint8_t *physics=g.physics+y*8+(xlo>>3);
@@ -88,59 +161,7 @@ static int world_poprgn(int xlo,int ylo,int xhi,int yhi,int spritec,int cardc_pe
     world.deck&=~hand;
     if (sprite_monster_set_hand(sprite,hand)<0) return -1;
     if (sprite_monster_set_tileid(sprite,tileid++)<0) return -1;
-    if (sprite_monster_set_family(sprite,world.family)<0) return -1;
-  }
-  
-  /* Every third cell around the border, if its outer neighbor is solid, it is vacant, and no monster is there,
-   * put a flag sprite there.
-   * Idea is to show the bounds of each monster region, and indicate whether the region is complete.
-   */
-  int xp=xlo,yp=ylo,phase=0;
-  int ndx=0,ndy=-1;
-  uint8_t xform=0;
-  for (;;) {
-    if (!phase--) {
-      if (!CKPH(xp,yp)) { // Cell is vacant, so far so good.
-        if (CKPH(xp+ndx,yp+ndy)) { // Outer neighbor is solid, good.
-          if (cell_present(cellv,cellc,yp*MAPW+xp)) { // And we didn't make a monster here.
-            fprintf(stderr,"make a flag at %d,%d. spritec=%d\n",xp,yp,world.spritec);//TODO make a flag here
-            struct sprite *sprite=sprite_spawn(&sprite_type_flag,xp+0.5,yp+0.5,0,0);
-            if (!sprite) return -1;
-            sprite_flag_set_family(sprite,world.family);
-            sprite_flag_set_xform(sprite,xform);
-          }
-        }
-      }
-      phase=2;
-    }
-    if (yp==ylo) {
-      if (++xp>xhi) {
-        xp=xhi;
-        yp++;
-        ndx=1;
-        ndy=0;
-        xform=EGG_XFORM_XREV;
-      }
-    } else if (xp==xhi) {
-      if (++yp>yhi) {
-        yp=yhi;
-        xp--;
-        ndx=0;
-        ndy=1;
-      }
-    } else if (yp==yhi) {
-      if (--xp<xlo) {
-        xp=xlo;
-        yp--;
-        ndx=-1;
-        ndy=0;
-        xform=0;
-      }
-    } else if (xp==xlo) {
-      if (--yp<=ylo) {
-        break;
-      }
-    }
+    sprite->family=world.family;
   }
   
   world.family++;
@@ -158,19 +179,28 @@ static int world_populate() {
    */
   struct sprite *hero=sprite_spawn(&sprite_type_hero,32.5,32.5,0,0);
   if (!hero) return -1;
-  uint64_t herohand=hand_deal_n(world.deck,6);
-  world.deck&=~herohand;
-  if (sprite_hero_set_hand(hero,herohand)<0) return -1;
   
-  /* The rest are random.
-   * A fixed set per region, and those regions and sets are defined right here.
+  /* Monsters spawn within specific ranges.
+   * poprgn( xlo,ylo, xhi,yhi, spritec, cardc_per, tileid )
+   * 32 cards.
    */
-  if (world_poprgn( 3, 3,15,14,1,10,0x53)<0) return -1; // One witch with a ton of cards in the northwest.
-  if (world_poprgn(19, 2,61,16,2, 5,0x43)<0) return -1; // Man.
-  if (world_poprgn( 2,44,43,61,2, 4,0x33)<0) return -1; // Monsters.
-  if (world_poprgn(45,31,62,62,3, 3,0x23)<0) return -1; // Greater Mammals.
-  if (world_poprgn( 2,24,25,38,3, 2,0x13)<0) return -1; // Birds.
-  if (world_poprgn(28,19,43,42,3, 1,0x03)<0) return -1; // Rodents.
+  if (world_poprgn(47,26,55,33, 1,10,0x33)<0) return -1; // Witch's castle.
+  if (world_poprgn( 1,52,12,62, 2, 4,0x13)<0) return -1; // SW island. Birds.
+  if (world_poprgn(15,49,29,61, 2, 1,0x03)<0) return -1; // Donut island. Rodents.
+  if (world_poprgn(32,52,62,62, 2, 6,0x23)<0) return -1; // SE island. Mammals.
+  
+  /* Spawning free cards is the same idea as monsters.
+   */
+  if (world_freergn( 3, 2,19,32, 3)<0) return -1; // NW island.
+  if (world_freergn(22, 3,47,18, 4)<0) return -1; // North end of big island.
+  if (world_freergn(51, 1,62,10, 4)<0) return -1; // NE island.
+  if (world_freergn(46,14,62,22, 3)<0) return -1; // ENE peninsula.
+  if (world_freergn(25,27,41,45, 6)<0) return -1; // Start zone.
+
+  //TODO Guards:
+  // 34,25 req=10
+  // 43,37 req=30
+  // 53,14 req=40
   
   if (world.deck) {
     fprintf(stderr,"%s:%d:OOPS: Failed to deal out the whole deck.",__FILE__,__LINE__);
@@ -212,17 +242,52 @@ void world_update(double elapsed,int input) {
   
   /* Drop any defunct sprites.
    */
+  int defuncted=0;
   for (i=world.spritec,p=world.spritev+world.spritec-1;i-->0;p--) {
     struct sprite *sprite=*p;
     if (!sprite->defunct) continue;
+    if (sprite==hero) hero=0;
     world.spritec--;
     memmove(p,p+1,sizeof(void*)*(world.spritec-i));
     sprite_del(sprite);
+    defuncted=1;
+  }
+  
+  /* If anything got removed, recheck all regions for completion.
+   */
+  if (defuncted) {
+    struct region *region=world.regionv;
+    for (i=REGION_LIMIT;i-->0;region++) {
+      region->done=1;
+    }
+    for (i=world.spritec,p=world.spritev;i-->0;p++) {
+      struct sprite *sprite=*p;
+      world.regionv[sprite->family].done=0;
+    }
   }
   
   /* One pass of the layer sort.
    */
   //TODO Punt this a bit. We're not very sprite-heavy, and I think we might not even need sorting.
+  
+  /* If there's a hero, check her region.
+   */
+  if (hero) {
+    int qx=(int)hero->x;
+    int qy=(int)hero->y;
+    struct region *region=world.regionv+world.herofamily;
+    if ((qx<region->xlo)||(qx>region->xhi)||(qy<region->ylo)||(qy>region->yhi)) {
+      world.herofamily=0;
+      for (i=0,region=world.regionv;i<REGION_LIMIT;i++,region++) {
+        if (qx<region->xlo) continue;
+        if (qx>region->xhi) continue;
+        if (qy<region->ylo) continue;
+        if (qy>region->yhi) continue;
+        world.herofamily=i;
+        break;
+      }
+    }
+  }
 }
 
 /* Spawn sprite.
@@ -268,4 +333,12 @@ struct sprite *sprite_by_id(int spriteid) {
     if (sprite->id==spriteid) return sprite;
   }
   return 0;
+}
+
+/* Local completion.
+ */
+ 
+int world_describe_local_completion() {
+  if (!world.herofamily) return 0;
+  return world.regionv[world.herofamily].done?1:-1;
 }

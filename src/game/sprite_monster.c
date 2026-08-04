@@ -6,7 +6,6 @@ struct sprite_monster {
   uint8_t tileid;
   double faceclock;
   uint8_t xform;
-  int family;
 };
 
 #define SPRITE ((struct sprite_monster*)sprite)
@@ -72,7 +71,6 @@ static void monster_cb_battle(struct modal *modal) {
   } else {
     fprintf(stderr,"...thou hast done well in defeating the monster\n");//XXX
     sprite->defunct=1;
-    sprite_flag_refresh();
     if (manhand==0x000fffffffffffffll) {
       fprintf(stderr,"YOU GOT ALL FIFTY TWO!\n");//TODO
     }
@@ -88,6 +86,10 @@ static int _monster_bump(struct sprite *sprite,struct sprite *hero) {
     .cb=monster_cb_battle,
     .userdata=&monster_battle_userdata,
   };
+  if (!args.man_hand) {
+    fprintf(stderr,"%s:%d:TODO: Reject battle due to no cards.\n",__FILE__,__LINE__);//TODO dialogue or something. mind that this retriggers instantly if we don't go modal.
+    return 1;
+  }
   modal_world_get_sprite_render_position(&args.hltx,&args.hlty,modal_topmost_of_type(&modal_type_world),sprite);
   struct modal *modal=modal_spawn(&modal_type_battle,&args,sizeof(args));
   if (!modal) {
@@ -134,15 +136,4 @@ int sprite_monster_set_tileid(struct sprite *sprite,uint8_t tileid) {
   if (!sprite||(sprite->type!=&sprite_type_monster)) return -1;
   SPRITE->tileid=tileid;
   return 0;
-}
-
-int sprite_monster_set_family(struct sprite *sprite,int family) {
-  if (!sprite||(sprite->type!=&sprite_type_monster)) return -1;
-  SPRITE->family=family;
-  return 0;
-}
-
-int sprite_monster_get_family(const struct sprite *sprite) {
-  if (!sprite||(sprite->type!=&sprite_type_monster)) return 0;
-  return SPRITE->family;
 }
