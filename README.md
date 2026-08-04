@@ -74,9 +74,10 @@ Actual:
 - - Try: 10, 5,5, 4,4, 3,3,3, 2,2,2, 1,1,1 -- 14 monsters. Seems to work good.
 
 - [x] Monsters run away.
-- [ ] Toll gates.
+- [x] Toll gates.
 - [ ] View hand, maybe by pressing B in the outer world?
 - [x] Show card count always in outerworld.
+- [ ] Two monsters ended up on top of each other, after adding flee.
 
 - [x] Play time is too long, and the world too big. Need a rethink of the initial shuffle.
 - - I'm taking 15 minutes to clear it, and that's knowing exactly what to do.

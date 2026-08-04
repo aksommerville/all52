@@ -197,10 +197,15 @@ static int world_populate() {
   if (world_freergn(46,14,62,22, 3)<0) return -1; // ENE peninsula.
   if (world_freergn(25,27,41,45, 6)<0) return -1; // Start zone.
 
-  //TODO Guards:
-  // 34,25 req=10
-  // 43,37 req=20
-  // 53,14 req=40
+  /* Three Card Guards, blocking specific regions.
+   */
+  struct sprite *sprite;
+  if (!(sprite=sprite_spawn(&sprite_type_guard,34.5,25.5,0,0))) return -1;
+  sprite_guard_set_limit(sprite,10);
+  if (!(sprite=sprite_spawn(&sprite_type_guard,43.5,37.5,0,0))) return -1;
+  sprite_guard_set_limit(sprite,30);
+  if (!(sprite=sprite_spawn(&sprite_type_guard,53.5,35.5,0,0))) return -1;
+  sprite_guard_set_limit(sprite,40);
   
   if (world.deck) {
     fprintf(stderr,"%s:%d:OOPS: Failed to deal out the whole deck.",__FILE__,__LINE__);

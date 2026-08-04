@@ -53,6 +53,7 @@ struct sprite *sprite_new(const struct sprite_type *type,double x,double y,const
 extern const struct sprite_type sprite_type_hero;
 extern const struct sprite_type sprite_type_monster;
 extern const struct sprite_type sprite_type_card;
+extern const struct sprite_type sprite_type_guard;
 
 struct sprite_args_hero {
   int TODO;
@@ -79,5 +80,7 @@ int sprite_monster_set_tileid(struct sprite *sprite,uint8_t tileid);
 
 uint64_t sprite_card_get_hand(const struct sprite *sprite); // Hand should be just one bit, but we tolerate anything.
 int sprite_card_set_hand(struct sprite *sprite,uint64_t hand);
+
+int sprite_guard_set_limit(struct sprite *sprite,int limit);
 
 #endif

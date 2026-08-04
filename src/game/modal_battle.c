@@ -116,8 +116,6 @@ static int _battle_init(struct modal *modal,const void *args,int argslen) {
     hand_log("man",MODAL->man_hand);
     return -1;
   }
-  hand_log("cpu",MODAL->cpu_hand);//XXX
-  hand_log("man",MODAL->man_hand);
   
   /* Count the suits in each hand.
    */
@@ -130,7 +128,6 @@ static int _battle_init(struct modal *modal,const void *args,int argslen) {
     hand_log("man",MODAL->man_hand);
     return -1;
   }
-  fprintf(stderr,"suitc=%d (cpu=%d, man=%d)\n",MODAL->suitc,cpusuitc,mansuitc);//XXX
   
   /* Pick the CPU's play, might as well do it immediately.
    */
@@ -138,7 +135,6 @@ static int _battle_init(struct modal *modal,const void *args,int argslen) {
     fprintf(stderr,"%s:%d: hand_pick_n() failed\n",__FILE__,__LINE__);
     return -1;
   }
-  hand_log("cpu_play",MODAL->cpu_play);//XXX
   
   /* Generate the prompts.
    */
@@ -228,7 +224,7 @@ static void battle_update_INTRO(struct modal *modal,double elapsed,int input) {
       MODAL->stage=STAGE_CHEAT_ABORT;
       battle_cheat_prompt(modal,"Cheat: cancel game");
     } else {
-      if (MODAL->cheatc) fprintf(stderr,"battle ignoring unknown %d-stroke cheat code.\n",MODAL->cheatc);
+      //if (MODAL->cheatc) fprintf(stderr,"battle ignoring unknown %d-stroke cheat code.\n",MODAL->cheatc);
       MODAL->stage=STAGE_PICK;
       MODAL->stageclock=0.0;
       modal->opaque=1;
@@ -304,10 +300,7 @@ static void battle_maybe_confirm(struct modal *modal) {
   if (MODAL->pickv[2]>=0) validc++;
   if (MODAL->pickv[3]>=0) validc++;
   if (validc==MODAL->suitc) {
-    fprintf(stderr,"User has %d selections. Ask to confirm.\n",validc);//TODO
     MODAL->confirmp=0;
-  } else {
-    fprintf(stderr,"%s: %d suits picked, need exactly %d.\n",__func__,validc,MODAL->suitc);
   }
 }
 
@@ -480,10 +473,12 @@ static void battle_update_ALIGN(struct modal *modal,double elapsed,int input) {
       }
     }
     
+    /**
     fprintf(stderr,"cpu_disbv: %d,%d,%d,%d\n",MODAL->cpu_disbv[0],MODAL->cpu_disbv[1],MODAL->cpu_disbv[2],MODAL->cpu_disbv[3]);
     fprintf(stderr,"man_disbv: %d,%d,%d,%d\n",MODAL->man_disbv[0],MODAL->man_disbv[1],MODAL->man_disbv[2],MODAL->man_disbv[3]);
     fprintf(stderr,"cpu_suit_disbv: %d,%d,%d,%d\n",MODAL->cpu_suit_disbv[0],MODAL->cpu_suit_disbv[1],MODAL->cpu_suit_disbv[2],MODAL->cpu_suit_disbv[3]);
     fprintf(stderr,"man_suit_disbv: %d,%d,%d,%d\n",MODAL->man_suit_disbv[0],MODAL->man_suit_disbv[1],MODAL->man_suit_disbv[2],MODAL->man_suit_disbv[3]);
+    /**/
   }
 }
 

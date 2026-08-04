@@ -245,8 +245,8 @@ static void monster_cb_battle(struct modal *modal) {
   }
   uint64_t manhand=modal_battle_get_man_hand(modal);
   uint64_t cpuhand=modal_battle_get_cpu_hand(modal);
-  hand_log("cpu after",cpuhand);
-  hand_log("man after",manhand);
+  //hand_log("cpu after",cpuhand);
+  //hand_log("man after",manhand);
   sprite_hero_set_hand(hero,manhand);
   SPRITE->hand=cpuhand;
   if (!manhand) { // Hero cleaned out!
