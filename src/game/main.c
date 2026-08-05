@@ -29,6 +29,7 @@ static int scan_resources() {
   REQIMG(world,512,512)
   REQIMG(sprites,128,128)
   REQIMG(font,48,30)
+  REQIMG(modals,128,128)
   #undef REQIMG
   
   struct rom_reader reader;
@@ -105,9 +106,7 @@ int egg_client_init() {
   srand_auto();
   
   if (modals_init()<0) return -1;
-  //TODO should eventually be a "hello" modal
-  struct modal_args_world args={0};
-  struct modal *modal=modal_spawn(&modal_type_world,&args,sizeof(args));
+  struct modal *modal=modal_spawn(&modal_type_hello,0,0);
   if (!modal) return -1;
 
   return 0;
@@ -128,7 +127,29 @@ void egg_client_update(double elapsed) {
       g.input_blackout=0;
     }
   }
+  
+  /* We naively tick the playclock at all times.
+   * The world and victory modals reset and sample it at the right moments,
+   * so it shouldn't be a problem that it ticks at times when it actually doesn't count.
+   * We do want to count time spent in the battle and dialogue modals -- everything from start to finish of a session.
+   */
+  g.playclock+=elapsed;
+  
   modals_update(elapsed,input);
+  
+  /* If the gameover or victory modal needs spawned, do it here.
+   * It would be more convenient in modal_world update, but that won't run until the next frame, there would be flicker.
+   */
+  if (g.finish) {
+    struct modal *next;
+    if (g.finish>0) next=modal_spawn(&modal_type_victory,0,0);
+    else next=modal_spawn(&modal_type_gameover,0,0);
+    if (next) {
+      struct modal *world=modal_topmost_of_type(&modal_type_world);
+      if (world) world->defunct=1;
+    }
+    g.finish=0;
+  }
 }
 
 void egg_client_render() {

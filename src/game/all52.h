@@ -36,11 +36,14 @@ extern struct g {
   int romc;
   struct graf graf;
   int input_blackout;
+  int finish; // -1 to lose or 1 to win, effected at the end of modal_world's update.
+  double playclock;
   
   int texid_world;
   int texid_sprites;
   int texid_font;
   int texid_cards; // Generated at init from sprites. CARDW*cardid
+  int texid_modals;
   const uint8_t *physics; // LRTB big-endian, 1 bit per cell. 512 bytes.
 } g;
 

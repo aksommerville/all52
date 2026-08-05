@@ -42,7 +42,7 @@ Further requirements:
 - U 2026-08-09 Audio. Plan to submit today but it's ok to miss it.
 - M 2026-08-10
 - T 2026-08-11
-- W 2026-08-12
+- W 2026-08-12 js13k begins tomorrow. Really prefer to be done with this one by today.
 - R 2026-08-13
 - F 2026-08-14
 - S 2026-08-15 Submit by EOD or die trying.
@@ -53,61 +53,18 @@ Actual:
 
 ## TODO
 
-- [x] Scratch graphics for world and Dot.
-- [x] Modal, sprite, and map plumbing.
-- [x] Hero movement.
-- [x] Camera.
-- [x] Battle triggers.
-- [x] Battle.
-- [x] Should there be persistence? ...no. It plays pretty easy in one sitting. And I don't think there will be any high score worth saving.
-- [x] Map tooling. I'm picturing we show the big image, and MacPaint pencil over it for physics.
-- [x] Font replacement. Along the lines of Egg's API-wise, but Egg's is overkill.
-- [x] Pressing A to dismiss the battle causes the hero's peek to begin briefly. Black it out.
-- [x] Battle at DISBURSEMENT stage, it picked the wrong vertical positions when I had both a swap and a take.
-- [x] Battle: After picking rank, focus should return to the suit row.
-- [x] I think default rank to the first card too, not the "none".
-
-- [x] How many monsters, and how many cards apiece?
-- - Dot starts with 6, I like that number. Leaves 46 to distribute.
-- - Monster positions and hands will be random, but do keep the distribution fixed (by count at least).
-- - And not entirely random either. A given monster will appear in a certain region and have a hand of a certain size.
-- - Try: 10, 5,5, 4,4, 3,3,3, 2,2,2, 1,1,1 -- 14 monsters. Seems to work good.
-
-- [x] Monsters run away.
-- [x] Toll gates.
+- [ ] Is it possible for some draw to be unwinnable? I'm pretty sure it's not, but prove it.
 - [ ] View hand, maybe by pressing B in the outer world?
-- [x] Show card count always in outerworld.
-- [x] Two monsters ended up on top of each other, after adding flee.
-- - The logic looks sound and I haven't easily been able to reproduce it.
-- - I suspect both monsters were in motion at the same time. If that happened, the second one wouldn't know about the first's final position.
-- - But we can have it ask! The final position is at least known at that point.
-
-- [x] Play time is too long, and the world too big. Need a rethink of the initial shuffle.
-- - I'm taking 15 minutes to clear it, and that's knowing exactly what to do.
-- - My time should be consistently under 10 minutes. I'd feel better with about 5.
-- - ...7 minutes, after eliminating the NW island.
-- - ...with free cards placed, it's more like 10 minutes. ok, still close enough.
-- - [x] Arrange the world with a big central no-combat zone, and four smaller combat zones peripheral to it.
-- - [x] Place a bunch of free cards all around the world initially.
-- - [x] Maybe start without any cards? ...yeah i like that
-
-- [x] Instead of the flag borders, can we put a region-completion indicator in the status bar? And include free-card regions too.
-- [x] Can we give some fanfare when a region is cleared?
-- - How about a ring of flags or something, around the region's edge.
-- [x] Probably need some kind of guidance to the remaining monsters.
 - [ ] Extra juice after killing a monster.
-- [x] Eliminate battle logging, once I'm comfortable with it.
 - [ ] Consider using two full-size images, one for roofs, and mark the roofed regions so it disappears when you're inside.
 - [ ] Figure out how we're giving the cross-game clue, and what our bonus is.
 - [ ] Proper map.
 - [ ] Proper graphics.
 - [ ] Music.
 - [ ] Sound effects.
-- [ ] Hello modal.
-- [ ] Game over modal.
-- [ ] Victory modal.
-- [x] Dialogue.
-- [x] Tile validator.
+- [x] Hello modal.
+- [x] Game over modal.
+- [x] Victory modal.
 - [ ] Landing page.
 
 After the jam.

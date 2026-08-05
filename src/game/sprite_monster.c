@@ -259,14 +259,14 @@ static void monster_cb_battle(struct modal *modal) {
   sprite_hero_set_hand(hero,manhand);
   SPRITE->hand=cpuhand;
   if (!manhand) { // Hero cleaned out!
-    fprintf(stderr,"Lost all the cards!\n");//TODO game over
+    g.finish=-1;
   } else if (cpuhand) {
     monster_flee(sprite,hero);
   } else {
     fprintf(stderr,"...thou hast done well in defeating the monster\n");//TODO fanfare. maybe soulballs?
     sprite->defunct=1;
     if (manhand==0x000fffffffffffffll) {
-      fprintf(stderr,"YOU GOT ALL FIFTY TWO!\n");//TODO launch modal
+      g.finish=1;
     }
   }
 }

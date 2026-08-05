@@ -76,9 +76,9 @@ struct modal *modal_new(const struct modal_type *type,const void *args,int argsl
 extern const struct modal_type modal_type_world;
 extern const struct modal_type modal_type_battle;
 extern const struct modal_type modal_type_dialogue; // Overlays world.
-//TODO hello
-//TODO gameover
-//TODO victory
+extern const struct modal_type modal_type_hello;
+extern const struct modal_type modal_type_gameover;
+extern const struct modal_type modal_type_victory;
 
 /* Species.
  ***************************************************************************/

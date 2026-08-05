@@ -59,8 +59,8 @@ void modals_update(double elapsed,int input) {
     if (!focus||(focus==modal)||modal->update_when_blurred) {
       int minput=input;
       if (modal->input_blackout) {
-        if (!(minput&(EGG_BTN_LEFT|EGG_BTN_RIGHT|EGG_BTN_UP|EGG_BTN_DOWN|EGG_BTN_SOUTH))) modal->input_blackout=0;
-        else minput=0;
+        if (!(minput&(EGG_BTN_WEST|EGG_BTN_SOUTH))) modal->input_blackout=0;
+        else minput&=~(EGG_BTN_WEST|EGG_BTN_SOUTH);
       }
       if (modal->type->update) modal->type->update(modal,elapsed,minput);
     }

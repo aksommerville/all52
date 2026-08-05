@@ -32,9 +32,8 @@ static int _world_init(struct modal *modal,const void *args,int argslen) {
   modal->opaque=1;
   MODAL->cardc_visible=-1;
 
-  if (!args||(argslen!=sizeof(struct modal_args_world))) return -1;
-  //TODO digest args
-  
+  g.finish=0;
+  g.playclock=0.0;
   if (world_reset()<0) return -1;
   
   return 0;

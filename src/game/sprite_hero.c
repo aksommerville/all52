@@ -1,7 +1,7 @@
 #include "all52.h"
 
-#define PEEK_OUT_SPEED 1.000
-#define PEEK_IN_SPEED  2.000
+#define PEEK_OUT_SPEED 2.000
+#define PEEK_IN_SPEED  3.000
 #define TURN_TIME 0.150
 
 struct sprite_hero {
