@@ -79,6 +79,7 @@ extern const struct modal_type modal_type_dialogue; // Overlays world.
 extern const struct modal_type modal_type_hello;
 extern const struct modal_type modal_type_gameover;
 extern const struct modal_type modal_type_victory;
+extern const struct modal_type modal_type_status; // During outerworld play, slides up from bottom on demand.
 
 /* Species.
  ***************************************************************************/

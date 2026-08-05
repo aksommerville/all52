@@ -247,6 +247,12 @@ void sprite_hero_input(struct sprite *sprite,int input) {
     }
   }
   
+  /* If she pressed B, spawn the status modal.
+   */
+  if ((input&EGG_BTN_WEST)&&!(SPRITE->pvinput&EGG_BTN_WEST)) {
+    struct modal *modal=modal_spawn(&modal_type_status,0,0);
+  }
+  
   SPRITE->pvinput=input;
 }
 

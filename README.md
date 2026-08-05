@@ -54,7 +54,8 @@ Actual:
 ## TODO
 
 - [ ] Is it possible for some draw to be unwinnable? I'm pretty sure it's not, but prove it.
-- [ ] View hand, maybe by pressing B in the outer world?
+- - There are definitely cases that boil down to luck, eg the Witch gets dealt all four Kings.
+- [x] View hand, maybe by pressing B in the outer world?
 - [ ] Extra juice after killing a monster.
 - [ ] Consider using two full-size images, one for roofs, and mark the roofed regions so it disappears when you're inside.
 - [ ] Figure out how we're giving the cross-game clue, and what our bonus is.
