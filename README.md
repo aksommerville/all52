@@ -55,17 +55,13 @@ Actual:
 
 - [ ] Is it possible for some draw to be unwinnable? I'm pretty sure it's not, but prove it.
 - - There are definitely cases that boil down to luck, eg the Witch gets dealt all four Kings.
-- [x] View hand, maybe by pressing B in the outer world?
-- [x] Extra juice after killing a monster.
 - [ ] Figure out how we're giving the cross-game clue, and what our bonus is.
 - - [ ] I'm sure we'll at least need a trivial dialogue sprite.
 - [ ] Proper map.
-- [x] Proper graphics. (sprites and modals are fine, just need the enormous map)
 - [ ] Music.
+- - I think no battle music, just one song during play. So it needs to be pretty long.
+- - Then a no-repeat for gameover, and short ones for hello and victory.
 - [ ] Sound effects.
-- [x] Hello modal.
-- [x] Game over modal.
-- [x] Victory modal.
 - [ ] Landing page.
 
 After the jam.
