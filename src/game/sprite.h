@@ -54,6 +54,7 @@ extern const struct sprite_type sprite_type_hero;
 extern const struct sprite_type sprite_type_monster;
 extern const struct sprite_type sprite_type_card;
 extern const struct sprite_type sprite_type_guard;
+extern const struct sprite_type sprite_type_ghost;
 
 struct sprite_args_hero {
   int TODO;

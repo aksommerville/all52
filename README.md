@@ -56,11 +56,11 @@ Actual:
 - [ ] Is it possible for some draw to be unwinnable? I'm pretty sure it's not, but prove it.
 - - There are definitely cases that boil down to luck, eg the Witch gets dealt all four Kings.
 - [x] View hand, maybe by pressing B in the outer world?
-- [ ] Extra juice after killing a monster.
-- [ ] Consider using two full-size images, one for roofs, and mark the roofed regions so it disappears when you're inside.
+- [x] Extra juice after killing a monster.
 - [ ] Figure out how we're giving the cross-game clue, and what our bonus is.
+- - [ ] I'm sure we'll at least need a trivial dialogue sprite.
 - [ ] Proper map.
-- [ ] Proper graphics.
+- [x] Proper graphics. (sprites and modals are fine, just need the enormous map)
 - [ ] Music.
 - [ ] Sound effects.
 - [x] Hello modal.
@@ -72,5 +72,6 @@ After the jam.
 - [ ] Restore universal menu, in metadata.
 
 Expansion ideas, probably not in scope for the jam.
+- [ ] Consider using two full-size images, one for roofs, and mark the roofed regions so it disappears when you're inside.
 - [ ] Play cards outside battle, like spells.
 - [ ] Monsters that play a different game with the same cards.

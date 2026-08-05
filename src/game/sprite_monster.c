@@ -265,6 +265,7 @@ static void monster_cb_battle(struct modal *modal) {
   } else {
     fprintf(stderr,"...thou hast done well in defeating the monster\n");//TODO fanfare. maybe soulballs?
     sprite->defunct=1;
+    sprite_spawn(&sprite_type_ghost,sprite->x,sprite->y,0,0);
     if (manhand==0x000fffffffffffffll) {
       g.finish=1;
     }
