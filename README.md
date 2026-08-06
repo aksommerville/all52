@@ -73,7 +73,7 @@ Actual:
 - - There are definitely cases that boil down to luck, eg the Witch gets dealt all four Kings.
 - [ ] Figure out how we're giving the cross-game clue, and what our bonus is.
 - - [ ] I'm sure we'll at least need a trivial dialogue sprite.
-- - [ ] Maybe a trick-floor puzzle in the graveyard where you have to consult the compass? It could be there all along and the clue is just "look at your compass in the graveyard".
+- - [x] Maybe a trick-floor puzzle in the graveyard where you have to consult the compass? It could be there all along and the clue is just "look at your compass in the graveyard".
 - [ ] Proper map.
 - [x] Music.
 - - I think no battle music, just one song during play. So it needs to be pretty long.

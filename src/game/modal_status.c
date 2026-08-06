@@ -22,6 +22,26 @@ struct modal_status {
 static void _status_del(struct modal *modal) {
 }
 
+/* Get compass override.
+ * (hero) is required.
+ * Returns zero for no override, proceed with default.
+ * Otherwise a single bit 0x80..0x01 = NW..SE, or multiple bits to explicitly display nothing.
+ */
+ 
+static uint8_t status_get_compass_override(struct modal *modal,struct sprite *hero) {
+  struct sprite **spritev=0;
+  int i=world_get_sprites(&spritev);
+  while (i-->0) {
+    struct sprite *sprite=spritev[i];
+    if (sprite->defunct) continue;
+    if (sprite->type==&sprite_type_bonusguard) {
+      uint8_t override=sprite_bonusguard_get_compass_override(sprite,hero);
+      if (override) return override;
+    }
+  }
+  return 0;
+}
+
 /* Init.
  */
  
@@ -52,37 +72,54 @@ static int _status_init(struct modal *modal,const void *args,int argslen) {
   if (hero) {
     MODAL->hand=sprite_hero_get_hand(hero);
     
-    /* Now find the nearest monster or card sprite so we can point to it.
+    /* Check for compass overrides.
      */
-    struct sprite *nearest=0;
-    double nearestd2=999.999;
-    for (i=spritec;i-->0;) {
-      struct sprite *sprite=spritev[i];
-      if (sprite->defunct) continue;
-      if (
-        (sprite->type==&sprite_type_monster)||
-        (sprite->type==&sprite_type_card)
-      ) {
-        double dx=sprite->x-hero->x;
-        double dy=sprite->y-hero->y;
-        double d2=dx*dx+dy*dy;
-        if (!nearest||(d2<nearestd2)) {
-          nearest=sprite;
-          nearestd2=d2;
+    uint8_t override=status_get_compass_override(modal,hero);
+    if (override) {
+      switch (override) {
+        case 0x80: MODAL->arrowtile=0x6d; MODAL->arrowxform=EGG_XFORM_YREV; MODAL->arrowoffy=1; break;
+        case 0x40: MODAL->arrowtile=0x6c; MODAL->arrowxform=EGG_XFORM_SWAP; break;
+        case 0x20: MODAL->arrowtile=0x6d; MODAL->arrowxform=EGG_XFORM_XREV|EGG_XFORM_YREV; MODAL->arrowoffx=1; MODAL->arrowoffy=1; break;
+        case 0x10: MODAL->arrowtile=0x6c; break;
+        case 0x08: MODAL->arrowtile=0x6c; MODAL->arrowxform=EGG_XFORM_XREV; MODAL->arrowoffx=1; break;
+        case 0x04: MODAL->arrowtile=0x6d; break;
+        case 0x02: MODAL->arrowtile=0x6c; MODAL->arrowxform=EGG_XFORM_SWAP|EGG_XFORM_XREV; MODAL->arrowoffy=1; break;
+        case 0x01: MODAL->arrowtile=0x6d; MODAL->arrowxform=EGG_XFORM_XREV; MODAL->arrowoffx=1; break;
+      }
+    
+    /* No override? Find the nearest monster or card sprite so we can point to it.
+     */
+    } else {
+      struct sprite *nearest=0;
+      double nearestd2=999.999;
+      for (i=spritec;i-->0;) {
+        struct sprite *sprite=spritev[i];
+        if (sprite->defunct) continue;
+        if (
+          (sprite->type==&sprite_type_monster)||
+          (sprite->type==&sprite_type_card)
+        ) {
+          double dx=sprite->x-hero->x;
+          double dy=sprite->y-hero->y;
+          double d2=dx*dx+dy*dy;
+          if (!nearest||(d2<nearestd2)) {
+            nearest=sprite;
+            nearestd2=d2;
+          }
         }
       }
-    }
-    if (nearest) {
-      double t=atan2(nearest->x-hero->x,hero->y-nearest->y);
-           if (t<M_PI*-0.875) { MODAL->arrowtile=0x6c; MODAL->arrowxform=EGG_XFORM_SWAP|EGG_XFORM_XREV; MODAL->arrowoffy=1; }
-      else if (t<M_PI*-0.625) { MODAL->arrowtile=0x6d; }
-      else if (t<M_PI*-0.375) { MODAL->arrowtile=0x6c; }
-      else if (t<M_PI*-0.125) { MODAL->arrowtile=0x6d; MODAL->arrowxform=EGG_XFORM_YREV; MODAL->arrowoffy=1; }
-      else if (t<M_PI* 0.125) { MODAL->arrowtile=0x6c; MODAL->arrowxform=EGG_XFORM_SWAP; }
-      else if (t<M_PI* 0.375) { MODAL->arrowtile=0x6d; MODAL->arrowxform=EGG_XFORM_XREV|EGG_XFORM_YREV; MODAL->arrowoffx=1; MODAL->arrowoffy=1; }
-      else if (t<M_PI* 0.625) { MODAL->arrowtile=0x6c; MODAL->arrowxform=EGG_XFORM_XREV; MODAL->arrowoffx=1; }
-      else if (t<M_PI* 0.875) { MODAL->arrowtile=0x6d; MODAL->arrowxform=EGG_XFORM_XREV; MODAL->arrowoffx=1; }
-      else                    { MODAL->arrowtile=0x6c; MODAL->arrowxform=EGG_XFORM_SWAP|EGG_XFORM_XREV; MODAL->arrowoffy=1; }
+      if (nearest) {
+        double t=atan2(nearest->x-hero->x,hero->y-nearest->y);
+             if (t<M_PI*-0.875) { MODAL->arrowtile=0x6c; MODAL->arrowxform=EGG_XFORM_SWAP|EGG_XFORM_XREV; MODAL->arrowoffy=1; }
+        else if (t<M_PI*-0.625) { MODAL->arrowtile=0x6d; }
+        else if (t<M_PI*-0.375) { MODAL->arrowtile=0x6c; }
+        else if (t<M_PI*-0.125) { MODAL->arrowtile=0x6d; MODAL->arrowxform=EGG_XFORM_YREV; MODAL->arrowoffy=1; }
+        else if (t<M_PI* 0.125) { MODAL->arrowtile=0x6c; MODAL->arrowxform=EGG_XFORM_SWAP; }
+        else if (t<M_PI* 0.375) { MODAL->arrowtile=0x6d; MODAL->arrowxform=EGG_XFORM_XREV|EGG_XFORM_YREV; MODAL->arrowoffx=1; MODAL->arrowoffy=1; }
+        else if (t<M_PI* 0.625) { MODAL->arrowtile=0x6c; MODAL->arrowxform=EGG_XFORM_XREV; MODAL->arrowoffx=1; }
+        else if (t<M_PI* 0.875) { MODAL->arrowtile=0x6d; MODAL->arrowxform=EGG_XFORM_XREV; MODAL->arrowoffx=1; }
+        else                    { MODAL->arrowtile=0x6c; MODAL->arrowxform=EGG_XFORM_SWAP|EGG_XFORM_XREV; MODAL->arrowoffy=1; }
+      }
     }
   }
   
