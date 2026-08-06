@@ -50,18 +50,27 @@ Further requirements:
 
 Actual:
 - 2026-08-02T14:49: Completed battle and placement, so the game is technically complete, kind of. And it's fun! Just what I was going for.
+- 2026-08-06: Basically done except audio and map graphics. Map graphics is a big deal...
 
 ## TODO
 
+- [ ] Battle modal: Tap A during animations, should begin a fast-forward.
+- [ ] victory graphics, the times texture, sometimes i'm seeing garbage pixels
+- - Confirmed that the faulty pixels are in the text texture. Everything looks kosher tho, and it's only happening intermittently.
+- - Unable to reproduce.
+- [x] Victory triggers from battle. What happens if you pick up the final card loose?
+- - ...would be a big problem, but it's actually not possible: You need 30 to reach the east section, and that can't be done without picking up all the loose cards.
 - [ ] Is it possible for some draw to be unwinnable? I'm pretty sure it's not, but prove it.
 - - There are definitely cases that boil down to luck, eg the Witch gets dealt all four Kings.
 - [ ] Figure out how we're giving the cross-game clue, and what our bonus is.
 - - [ ] I'm sure we'll at least need a trivial dialogue sprite.
+- - [ ] Maybe a trick-floor puzzle in the graveyard where you have to consult the compass? It could be there all along and the clue is just "look at your compass in the graveyard".
 - [ ] Proper map.
 - [ ] Music.
 - - I think no battle music, just one song during play. So it needs to be pretty long.
 - - Then a no-repeat for gameover, and short ones for hello and victory.
 - [ ] Sound effects.
+- [ ] The piano bridge should make sounds when you walk over it.
 - [ ] Landing page.
 
 After the jam.

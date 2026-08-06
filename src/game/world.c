@@ -215,6 +215,28 @@ static int world_populate() {
     hand_log("remaining",world.deck);
     return -1;
   }
+  
+  /* XXX Give hero everything except the one of hearts, and give every monster exactly the one of hearts.
+   * So we can pick any fight, win it, and see the ending fast.
+   * ...big improvement! See the end in 15 seconds instead of 15 minutes :)
+   * ...but 10 tries or so, and haven't surfaced the bug.
+   */
+  if (0) {
+    fprintf(stderr,"XXXXXXXX Fast-win enabled. Disable this before release! %s:%d XXXXXXXXXXXXXXX\n",__FILE__,__LINE__);
+    struct sprite **p=world.spritev;
+    int i=world.spritec;
+    for (;i-->0;p++) {
+      sprite=*p;
+      if (sprite->type==&sprite_type_monster) {
+        sprite_monster_set_hand(sprite,0x0000000000000001ll);
+      } else if (sprite->type==&sprite_type_hero) {
+        sprite_hero_set_hand(sprite,0x000ffffffffffffell);
+      } else if (sprite->type==&sprite_type_card) {
+        sprite->defunct=1; // cards can only cause trouble in this setup
+      }
+    }
+  }
+  
   return 0;
 }
 

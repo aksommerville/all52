@@ -220,9 +220,6 @@ static void battle_update_INTRO(struct modal *modal,double elapsed,int input) {
     if (battle_check_cheat(modal,EGG_BTN_WEST,EGG_BTN_WEST,EGG_BTN_WEST,0)) {
       MODAL->stage=STAGE_CHEAT_WIN_ALL;
       battle_cheat_prompt(modal,"Cheat: you win!");
-    } else if (battle_check_cheat(modal,EGG_BTN_DOWN,EGG_BTN_DOWN,EGG_BTN_DOWN,0)) {
-      MODAL->stage=STAGE_CHEAT_ABORT;
-      battle_cheat_prompt(modal,"Cheat: cancel game");
     } else {
       //if (MODAL->cheatc) fprintf(stderr,"battle ignoring unknown %d-stroke cheat code.\n",MODAL->cheatc);
       MODAL->stage=STAGE_PICK;
@@ -234,11 +231,9 @@ static void battle_update_INTRO(struct modal *modal,double elapsed,int input) {
     }
   }
   if (input!=MODAL->pvinput) {
-    uint16_t btnid=0x4000;
-    for (;btnid;btnid>>=1) {
-      if (MODAL->cheatc>=CHEAT_LIMIT) break;
-      if ((input&btnid)&&!(MODAL->pvinput&btnid)) MODAL->cheatv[MODAL->cheatc++]=btnid;
-    }
+    // At first we had the whole gamepad, but now we're only blacking out SOUTH and WEST, so those are the only two we should use here.
+    if ((input&EGG_BTN_SOUTH)&&!(MODAL->pvinput&EGG_BTN_SOUTH)) MODAL->cheatv[MODAL->cheatc++]=EGG_BTN_SOUTH;
+    if ((input&EGG_BTN_WEST)&&!(MODAL->pvinput&EGG_BTN_WEST)) MODAL->cheatv[MODAL->cheatc++]=EGG_BTN_WEST;
   }
 }
 
