@@ -55,9 +55,18 @@ Actual:
 ## TODO
 
 - [ ] Battle modal: Tap A during animations, should begin a fast-forward.
-- [ ] victory graphics, the times texture, sometimes i'm seeing garbage pixels
+- [x] victory graphics, the times texture, sometimes i'm seeing garbage pixels
 - - Confirmed that the faulty pixels are in the text texture. Everything looks kosher tho, and it's only happening intermittently.
 - - Unable to reproduce.
+- - Happened again, first run after adding sound effects.
+- - Duplicate digits appear to be impacted the same way, which makes me suspect `texid_font` got corrupted somewhere.
+- - Note that most text labels use a client-side sampling of `texid_font` taken at startup, and the status modal uses separate tiles.
+- - In fact, `modal_victory` is the only place we use it!
+- - Drawing font to the screen every frame, yes, the corruption is visible. Saw Dot rendered into it somehow.
+- - - This seems to happen every time actually. Just face up immediately, and you can still see her eyeballs.
+- - The corruption we saw at `modal_victory` occurs when a card sprite spawns randomly in view at the very first frame.
+- - - Somehow our first render of sprites are going to `texid_font` instead of the main. What the hell?
+- - Needed a `graf_flush` before regenerating the card count texture. That shouldn't be necessary, I can't tell why it is.
 - [x] Victory triggers from battle. What happens if you pick up the final card loose?
 - - ...would be a big problem, but it's actually not possible: You need 30 to reach the east section, and that can't be done without picking up all the loose cards.
 - [ ] Is it possible for some draw to be unwinnable? I'm pretty sure it's not, but prove it.
@@ -72,6 +81,7 @@ Actual:
 - [ ] Sound effects.
 - [ ] The piano bridge should make sounds when you walk over it.
 - [ ] Landing page.
+- [ ] Eliminate `args` from sprite -- ended up not using them.
 
 After the jam.
 - [ ] Restore universal menu, in metadata.

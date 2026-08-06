@@ -31,6 +31,9 @@ struct sprite_type;
 #define CARDW 11
 #define CARDH 18
 
+#define SOUND_BLACKOUT_LIMIT 8
+#define SOUND_BLACKOUT_TIME 0.150
+
 extern struct g {
   void *rom;
   int romc;
@@ -45,8 +48,17 @@ extern struct g {
   int texid_cards; // Generated at init from sprites. CARDW*cardid
   int texid_modals;
   const uint8_t *physics; // LRTB big-endian, 1 bit per cell. 512 bytes.
+  
+  struct sound_blackout {
+    int rid;
+    double when;
+  } sound_blackoutv[SOUND_BLACKOUT_LIMIT];
+  int sound_blackoutc;
 } g;
 
 #define CKPH(x,y) (g.physics[(y)*8+((x)>>3)]&(0x80>>((x)&7)))
+
+void all52_sound(int rid,double trim,double pan);
+#define SFX(tag) all52_sound(RID_sound_##tag,1.0,0.0);
 
 #endif

@@ -56,10 +56,6 @@ extern const struct sprite_type sprite_type_card;
 extern const struct sprite_type sprite_type_guard;
 extern const struct sprite_type sprite_type_ghost;
 
-struct sprite_args_hero {
-  int TODO;
-};
-
 void sprite_hero_input(struct sprite *sprite,int input);
 
 /* I want to do a "peek" feature, where you press A in the outerworld and the camera pans a bit in whatever direction you're facing.
@@ -70,10 +66,6 @@ int sprite_hero_get_peeking(double *px,double *py,const struct sprite *sprite);
 uint64_t sprite_hero_get_hand(struct sprite *sprite);
 int sprite_hero_set_hand(struct sprite *sprite,uint64_t hand);
 void sprite_hero_set_blackout(struct sprite *sprite,double s); // No movement for so long. For when monsters flee.
-
-struct sprite_args_monster {
-  int TODO;
-};
 
 uint64_t sprite_monster_get_hand(struct sprite *sprite);
 int sprite_monster_set_hand(struct sprite *sprite,uint64_t hand);

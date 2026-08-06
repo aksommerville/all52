@@ -279,7 +279,7 @@ static void battle_player_ready(struct modal *modal) {
     if (man_cardidc>=MODAL->suitc) break;
   }
   
-  //TODO sound
+  SFX(battle_commit)
   MODAL->stage=STAGE_REVEAL;
   MODAL->stageclock=0.0;
 }
@@ -304,7 +304,7 @@ static void battle_maybe_confirm(struct modal *modal) {
  */
  
 static void battle_adjust(struct modal *modal,int d) {
-  //TODO sound
+  SFX(uimotion)
   if (MODAL->confirmp>=0) {
     MODAL->confirmp+=d;
     if (MODAL->confirmp<0) MODAL->confirmp=0;
@@ -329,13 +329,13 @@ static void battle_adjust(struct modal *modal,int d) {
  */
  
 static void battle_pick_suit(struct modal *modal) {
-  //TODO sound
+  SFX(uiback)
   MODAL->picking_rank=0;
 }
 
 static void battle_pick_rank(struct modal *modal) {
   if (MODAL->rankc<1) return;
-  //TODO sound
+  SFX(uiactivate)
   MODAL->picking_rank=1;
   // Prefer to select the lowest rank, but not "none":
   if ((MODAL->rankc>=2)&&(MODAL->rankv[0]<0)&&(MODAL->rankp==0)) MODAL->rankp=1;
@@ -346,11 +346,12 @@ static void battle_pick_rank(struct modal *modal) {
  */
  
 static void battle_cancel(struct modal *modal) {
-  //TODO sound
   if (MODAL->confirmp>=0) {
+    SFX(uiback)
     MODAL->confirmp=-1;
     return;
   }
+  SFX(uiactivate)
   MODAL->pickv[MODAL->pickp]=-1;
   MODAL->picking_rank=0;
   battle_maybe_confirm(modal);
@@ -373,7 +374,7 @@ static void battle_activate(struct modal *modal) {
     battle_pick_rank(modal);
     return;
   }
-  //TODO sound
+  SFX(uiactivate)
   MODAL->pickv[MODAL->pickp]=MODAL->rankv[MODAL->rankp];
   MODAL->picking_rank=0; // Return focus to the suit row.
   battle_maybe_confirm(modal);
@@ -467,13 +468,6 @@ static void battle_update_ALIGN(struct modal *modal,double elapsed,int input) {
         MODAL->cpu_hand=hand_add_cardid(MODAL->cpu_hand,MODAL->man_cardidv[i]);
       }
     }
-    
-    /**
-    fprintf(stderr,"cpu_disbv: %d,%d,%d,%d\n",MODAL->cpu_disbv[0],MODAL->cpu_disbv[1],MODAL->cpu_disbv[2],MODAL->cpu_disbv[3]);
-    fprintf(stderr,"man_disbv: %d,%d,%d,%d\n",MODAL->man_disbv[0],MODAL->man_disbv[1],MODAL->man_disbv[2],MODAL->man_disbv[3]);
-    fprintf(stderr,"cpu_suit_disbv: %d,%d,%d,%d\n",MODAL->cpu_suit_disbv[0],MODAL->cpu_suit_disbv[1],MODAL->cpu_suit_disbv[2],MODAL->cpu_suit_disbv[3]);
-    fprintf(stderr,"man_suit_disbv: %d,%d,%d,%d\n",MODAL->man_suit_disbv[0],MODAL->man_suit_disbv[1],MODAL->man_suit_disbv[2],MODAL->man_suit_disbv[3]);
-    /**/
   }
 }
 
@@ -589,7 +583,6 @@ static void battle_render_PICK(struct modal *modal) {
   int suit=0;
   for (;suit<4;suit++,suitx+=suitdx) {
     if (suit==MODAL->pickp) { // Highlight.
-      //TODO I think a different color when the suit row is focussed, would be appropriate.
       graf_decal(&g.graf,suitx-1,suity-1,0,114,11,14);
     }
     graf_decal(&g.graf,suitx,suity,suit*9,64,9,12); // Bucket indicator.

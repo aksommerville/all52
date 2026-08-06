@@ -26,7 +26,7 @@ static int _card_bump(struct sprite *sprite,struct sprite *hero) {
   herohand|=SPRITE->hand;
   sprite_hero_set_hand(hero,herohand);
   sprite->defunct=1;
-  //TODO sound
+  SFX(get_card)
   //TODO Maybe instead of a text dialogue, show the card image with some woo-woo graphics behind it?
   int cardid=cardid_from_bit(SPRITE->hand);
   int rank=rank_from_cardid(cardid);

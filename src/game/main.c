@@ -157,3 +157,49 @@ void egg_client_render() {
   modals_render();
   graf_flush(&g.graf);
 }
+
+/* Sound effects.
+ */
+
+void all52_sound(int rid,double trim,double pan) {
+  double now=egg_time_real();
+  double old=now-SOUND_BLACKOUT_TIME;
+  
+  /* Just for hygiene's sake, drop all expired blackout records from the tail.
+   */
+  while (g.sound_blackoutc>0) {
+    struct sound_blackout *sb=g.sound_blackoutv+g.sound_blackoutc-1;
+    if (sb->when>=old) break;
+    g.sound_blackoutc--;
+  }
+  
+  /* Check all blackout slots.
+   * If a slot is available for reuse, note it.
+   * If this sound is already playing, abort.
+   * Note that for no-replay purposes, we don't care about trim or pan.
+   */
+  struct sound_blackout *blackout=0;
+  struct sound_blackout *q=g.sound_blackoutv;
+  int i=g.sound_blackoutc;
+  for (;i-->0;q++) {
+    if (q->when<old) {
+      if (!blackout) blackout=q;
+    } else if (q->rid==rid) {
+      return; // Already playing recently, forget it.
+    }
+  }
+  
+  /* If we didn't find an evictable slot, append one.
+   * But if the list is full, abort: This is also a global too-many-sounds protection.
+   */
+  if (!blackout) {
+    if (g.sound_blackoutc>=SOUND_BLACKOUT_LIMIT) return;
+    blackout=g.sound_blackoutv+g.sound_blackoutc++;
+  }
+  
+  /* Fill in the blackout record, and start playing it.
+   */
+  blackout->rid=rid;
+  blackout->when=now;
+  egg_play_sound(rid,trim,pan);
+}

@@ -39,9 +39,6 @@ static int _hero_init(struct sprite *sprite,const void *args,int argslen) {
   SPRITE->facedx=0;
   SPRITE->facedy=1;
 
-  if (args&&(argslen==sizeof(struct sprite_args_hero))) {
-    //TODO digest args
-  }
   return 0;
 }
 
@@ -52,7 +49,6 @@ static int _hero_init(struct sprite *sprite,const void *args,int argslen) {
 static int hero_maybe_begin_walking(struct sprite *sprite,int dx,int dy) {
   int nx=SPRITE->qx+dx;
   int ny=SPRITE->qy+dy;
-  //TODO rejection feedback?
   if (SPRITE->inpeek) return 0; // OK to walk while peek'd, but not when actually holding the button.
   if ((nx<0)||(ny<0)||(nx>=MAPW)||(ny>=MAPH)) return 0;
   if (CKPH(nx,ny)) return 0;

@@ -33,9 +33,6 @@ static void _monster_del(struct sprite *sprite) {
  */
  
 static int _monster_init(struct sprite *sprite,const void *args,int argslen) {
-  if (args&&(argslen==sizeof(struct sprite_args_monster))) {
-    //TODO digest args
-  }
   SPRITE->tileid=0x00; // I'm Dot if they forget to set this.
   SPRITE->faceclock=((rand()&0xffff)/65535.0);
   return 0;
@@ -254,17 +251,17 @@ static void monster_cb_battle(struct modal *modal) {
   }
   uint64_t manhand=modal_battle_get_man_hand(modal);
   uint64_t cpuhand=modal_battle_get_cpu_hand(modal);
-  //hand_log("cpu after",cpuhand);
-  //hand_log("man after",manhand);
   sprite_hero_set_hand(hero,manhand);
   SPRITE->hand=cpuhand;
   if (!manhand) { // Hero cleaned out!
+    // This doesn't need a sound effect, we can bake it into the non-repeating gameover song.
     g.finish=-1;
   } else if (cpuhand) {
+    SFX(flee)
     monster_flee(sprite,hero);
   } else {
-    fprintf(stderr,"...thou hast done well in defeating the monster\n");//TODO fanfare. maybe soulballs?
     sprite->defunct=1;
+    SFX(vanquish)
     sprite_spawn(&sprite_type_ghost,sprite->x,sprite->y,0,0);
     if (manhand==0x000fffffffffffffll) {
       g.finish=1;
@@ -286,10 +283,22 @@ static int _monster_bump(struct sprite *sprite,struct sprite *hero) {
     .cb=monster_cb_battle,
     .userdata=&monster_battle_userdata,
   };
-  if (!args.man_hand) { // Not sure whether this will be possible. But do keep this clause at least as a safety; do not try to enter battle!
-    fprintf(stderr,"%s:%d:TODO: Reject battle due to no cards.\n",__FILE__,__LINE__);//TODO dialogue or something. mind that this retriggers instantly if we don't go modal.
+  
+  /* It's possible to touch a monster when your hand is empty.
+   * Shouldn't come up often; once you get your first card, going empty again is game over.
+   * But not hard to do either.
+   */
+  if (!args.man_hand) {
+    SFX(battle_reject)
+    struct modal_args_dialogue dargs={
+      .rid=1,
+      .strix=26,
+    };
+    struct modal *modal=modal_spawn(&modal_type_dialogue,&dargs,sizeof(dargs));
     return 1;
   }
+  
+  SFX(battle_start)
   modal_world_get_sprite_render_position(&args.hltx,&args.hlty,modal_topmost_of_type(&modal_type_world),sprite);
   struct modal *modal=modal_spawn(&modal_type_battle,&args,sizeof(args));
   if (!modal) {

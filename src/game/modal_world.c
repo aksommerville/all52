@@ -123,6 +123,7 @@ static void _world_render(struct modal *modal) {
   if (hero) {
     int cardc=hand_count_cards(sprite_hero_get_hand(hero));
     if (cardc!=MODAL->cardc_visible) {
+      graf_flush(&g.graf);
       MODAL->cardc_visible=cardc;
       egg_texture_del(MODAL->cardc_texid);
       char text[2];
