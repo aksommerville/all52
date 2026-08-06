@@ -35,6 +35,7 @@ static int _world_init(struct modal *modal,const void *args,int argslen) {
   g.finish=0;
   g.playclock=0.0;
   if (world_reset()<0) return -1;
+  all52_song(RID_song_heart_of_sixes,1);
   
   return 0;
 }

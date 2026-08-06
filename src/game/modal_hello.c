@@ -14,6 +14,9 @@ struct modal_hello {
 static int _hello_init(struct modal *modal,const void *args,int argslen) {
   modal->opaque=1;
   modal->interactive=1;
+  
+  all52_song(RID_song_cross_currents,1);
+  
   return 0;
 }
 
@@ -22,6 +25,7 @@ static void _hello_update(struct modal *modal,double elapsed,int input) {
     struct modal_args_world args={0};
     struct modal *world=modal_spawn(&modal_type_world,&args,sizeof(args));
     if (world) {
+      SFX(uiactivate)
       modal->defunct=1;
     }
   }

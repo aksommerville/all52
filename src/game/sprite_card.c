@@ -41,6 +41,7 @@ static int _card_bump(struct sprite *sprite,struct sprite *hero) {
     .strix=23,
     .insv=insv,
     .insc=2,
+    .suppress_sound=1,
   };
   struct modal *modal=modal_spawn(&modal_type_dialogue,&args,sizeof(args));
   return 1;

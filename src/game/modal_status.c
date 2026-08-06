@@ -105,6 +105,7 @@ static void _status_update(struct modal *modal,double elapsed,int input) {
    */
   if ((input&EGG_BTN_WEST)&&(MODAL->dslide<=0.0)) {
     MODAL->dslide=4.000;
+    SFX(uiback)
   }
   
   /* Sliding?

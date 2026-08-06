@@ -14,6 +14,9 @@ struct modal_gameover {
 static int _gameover_init(struct modal *modal,const void *args,int argslen) {
   modal->opaque=1;
   modal->interactive=1;
+  
+  all52_song(0,0);
+  
   return 0;
 }
 

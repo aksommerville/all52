@@ -107,6 +107,7 @@ struct modal_args_dialogue {
   int strix;
   const struct text_insertion *insv;
   int insc;
+  int suppress_sound; // We play sound:chatter by default. Nonzero here if you want silence, or you're playing something else.
 };
  
 #endif

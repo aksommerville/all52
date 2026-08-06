@@ -34,11 +34,14 @@ static int _dialogue_init(struct modal *modal,const void *args,int argslen) {
   modal->opaque=0;
   modal->interactive=1;
   
+  if (!ARGS->suppress_sound) SFX(chatter)
+  
   return 0;
 }
 
 static void _dialogue_update(struct modal *modal,double elapsed,int input) {
   if (input&EGG_BTN_SOUTH) {
+    SFX(uiback)
     modal->defunct=1;
   }
 }

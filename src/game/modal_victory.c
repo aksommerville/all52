@@ -82,26 +82,7 @@ static int _victory_init(struct modal *modal,const void *args,int argslen) {
   graf_flush(&g.graf);
   graf_set_output(&g.graf,1);
   
-  /* XXX Why am I getting garbage pixels in the text?
-   * They do show up here; they're in the produced image.
-   * But now I've been thru 20 times or so and it's not reproducing. Maybe I had a dirty build or something? (and how would that cause it?)
-   */
-  if (0) {
-    uint32_t *v=calloc(MODAL->texw*4,MODAL->texh);
-    egg_texture_get_pixels(v,MODAL->texw*4*MODAL->texh,MODAL->texid);
-    uint32_t *p=v;
-    int y=0; for (;y<MODAL->texh;y++) {
-      char line[32];
-      int linec=0;
-      int x=0; for (;x<MODAL->texw;x++,p++) {
-        if (!*p) line[linec++]=' ';
-        else if (*p==0xffffffff) line[linec++]='W';
-        else line[linec++]='?';
-      }
-      fprintf(stderr,"%.*s\n",linec,line);
-    }
-    free(v);
-  }
+  all52_song(RID_song_cross_currents,1);
   
   return 0;
 }

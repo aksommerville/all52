@@ -75,11 +75,12 @@ Actual:
 - - [ ] I'm sure we'll at least need a trivial dialogue sprite.
 - - [ ] Maybe a trick-floor puzzle in the graveyard where you have to consult the compass? It could be there all along and the clue is just "look at your compass in the graveyard".
 - [ ] Proper map.
-- [ ] Music.
+- [x] Music.
 - - I think no battle music, just one song during play. So it needs to be pretty long.
 - - Then a no-repeat for gameover, and short ones for hello and victory.
-- [ ] Sound effects.
-- [ ] The piano bridge should make sounds when you walk over it.
+- [x] Sound effects.
+- [x] The piano bridge should make sounds when you walk over it.
+- [ ] Gameover music.
 - [ ] Landing page.
 - [ ] Eliminate `args` from sprite -- ended up not using them.
 

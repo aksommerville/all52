@@ -69,6 +69,15 @@ static int hero_maybe_begin_walking(struct sprite *sprite,int dx,int dy) {
     return 0;
   }
   
+  /* Make a sound.
+   */
+       if ((ny== 6)&&(nx==48)) SFX(piano_a)
+  else if ((ny== 6)&&(nx==49)) SFX(piano_b)
+  else if ((ny== 6)&&(nx==50)) SFX(piano_c)
+  else SFX(step)
+  
+  /* Commit it.
+   */
   SPRITE->qx=nx;
   SPRITE->qy=ny;
   SPRITE->walking=1;
@@ -246,6 +255,7 @@ void sprite_hero_input(struct sprite *sprite,int input) {
   /* If she pressed B, spawn the status modal.
    */
   if ((input&EGG_BTN_WEST)&&!(SPRITE->pvinput&EGG_BTN_WEST)) {
+    SFX(uiactivate)
     struct modal *modal=modal_spawn(&modal_type_status,0,0);
   }
   

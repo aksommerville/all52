@@ -54,11 +54,14 @@ extern struct g {
     double when;
   } sound_blackoutv[SOUND_BLACKOUT_LIMIT];
   int sound_blackoutc;
+  int song_playing;
 } g;
 
 #define CKPH(x,y) (g.physics[(y)*8+((x)>>3)]&(0x80>>((x)&7)))
 
 void all52_sound(int rid,double trim,double pan);
 #define SFX(tag) all52_sound(RID_sound_##tag,1.0,0.0);
+
+void all52_song(int rid,int repeat);
 
 #endif

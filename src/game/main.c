@@ -203,3 +203,12 @@ void all52_sound(int rid,double trim,double pan) {
   blackout->when=now;
   egg_play_sound(rid,trim,pan);
 }
+
+/* Play song.
+ */
+ 
+void all52_song(int rid,int repeat) {
+  if (rid==g.song_playing) return;
+  g.song_playing=rid;
+  egg_play_song(1,rid,repeat,0.500,0.0);
+}
