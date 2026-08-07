@@ -21,13 +21,16 @@ static int _card_init(struct sprite *sprite,const void *args,int argslen) {
 /* Bump.
  */
  
+static void card_cb_bump_finished(struct modal *modal) {
+  g.finish=1;
+}
+ 
 static int _card_bump(struct sprite *sprite,struct sprite *hero) {
   uint64_t herohand=sprite_hero_get_hand(hero);
   herohand|=SPRITE->hand;
   sprite_hero_set_hand(hero,herohand);
   sprite->defunct=1;
   SFX(get_card)
-  //TODO Maybe instead of a text dialogue, show the card image with some woo-woo graphics behind it?
   int cardid=cardid_from_bit(SPRITE->hand);
   int rank=rank_from_cardid(cardid);
   int suit=suit_from_cardid(cardid);
@@ -42,6 +45,7 @@ static int _card_bump(struct sprite *sprite,struct sprite *hero) {
     .insv=insv,
     .insc=2,
     .suppress_sound=1,
+    .cb=(herohand==0x000fffffffffffffll)?card_cb_bump_finished:0,
   };
   struct modal *modal=modal_spawn(&modal_type_dialogue,&args,sizeof(args));
   return 1;

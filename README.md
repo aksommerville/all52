@@ -55,34 +55,13 @@ Actual:
 ## TODO
 
 - [ ] Battle modal: Tap A during animations, should begin a fast-forward.
-- [x] victory graphics, the times texture, sometimes i'm seeing garbage pixels
-- - Confirmed that the faulty pixels are in the text texture. Everything looks kosher tho, and it's only happening intermittently.
-- - Unable to reproduce.
-- - Happened again, first run after adding sound effects.
-- - Duplicate digits appear to be impacted the same way, which makes me suspect `texid_font` got corrupted somewhere.
-- - Note that most text labels use a client-side sampling of `texid_font` taken at startup, and the status modal uses separate tiles.
-- - In fact, `modal_victory` is the only place we use it!
-- - Drawing font to the screen every frame, yes, the corruption is visible. Saw Dot rendered into it somehow.
-- - - This seems to happen every time actually. Just face up immediately, and you can still see her eyeballs.
-- - The corruption we saw at `modal_victory` occurs when a card sprite spawns randomly in view at the very first frame.
-- - - Somehow our first render of sprites are going to `texid_font` instead of the main. What the hell?
-- - Needed a `graf_flush` before regenerating the card count texture. That shouldn't be necessary, I can't tell why it is.
 - [x] Victory triggers from battle. What happens if you pick up the final card loose?
 - - ...would be a big problem, but it's actually not possible: You need 30 to reach the east section, and that can't be done without picking up all the loose cards.
+- - ...updated sprite_card anyway, it's easy to do, and if layout changes in the future we're ready.
 - [ ] Is it possible for some draw to be unwinnable? I'm pretty sure it's not, but prove it.
 - - There are definitely cases that boil down to luck, eg the Witch gets dealt all four Kings.
-- [x] Figure out how we're giving the cross-game clue, and what our bonus is.
-- - [x] I'm sure we'll at least need a trivial dialogue sprite. ...haven't needed yet, wow. No worries if we eventually do.
-- - [x] Maybe a trick-floor puzzle in the graveyard where you have to consult the compass? It could be there all along and the clue is just "look at your compass in the graveyard".
-- - Surgeon General's Warning label in the sea. You can see a corner of it from the southeast island, and it's plainly visible via peek from home or southeast.
-- - Just need the text for it.
+- [ ] Get clue text from Skibbl, write in the surgeon general's warning box.
 - [ ] Proper map.
-- [x] Music.
-- - I think no battle music, just one song during play. So it needs to be pretty long.
-- - Then a no-repeat for gameover, and short ones for hello and victory.
-- [x] Sound effects.
-- [x] The piano bridge should make sounds when you walk over it.
-- [x] Gameover music. ...meh, i like silence here. And it's actually very hard to reach anyway.
 - [ ] Landing page.
 - [ ] Eliminate `args` from sprite -- ended up not using them.
 

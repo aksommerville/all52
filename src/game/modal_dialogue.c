@@ -8,6 +8,7 @@ struct modal_dialogue {
   struct modal hdr;
   int texid,texw,texh;
   int boxx,boxy,boxw,boxh;
+  void (*cb)(struct modal *modal);
 };
 
 #define MODAL ((struct modal_dialogue*)modal)
@@ -33,6 +34,7 @@ static int _dialogue_init(struct modal *modal,const void *args,int argslen) {
   
   modal->opaque=0;
   modal->interactive=1;
+  MODAL->cb=ARGS->cb;
   
   if (!ARGS->suppress_sound) SFX(chatter)
   
@@ -42,6 +44,10 @@ static int _dialogue_init(struct modal *modal,const void *args,int argslen) {
 static void _dialogue_update(struct modal *modal,double elapsed,int input) {
   if (input&EGG_BTN_SOUTH) {
     SFX(uiback)
+    if (MODAL->cb) {
+      MODAL->cb(modal);
+      MODAL->cb=0;
+    }
     modal->defunct=1;
   }
 }
