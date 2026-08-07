@@ -54,10 +54,13 @@ Actual:
 
 ## TODO
 
-- [ ] Battle modal: Tap A during animations, should begin a fast-forward.
+- [x] Battle modal: Tap A during animations, should begin a fast-forward.
 - [x] Victory triggers from battle. What happens if you pick up the final card loose?
 - - ...would be a big problem, but it's actually not possible: You need 30 to reach the east section, and that can't be done without picking up all the loose cards.
 - - ...updated sprite_card anyway, it's easy to do, and if layout changes in the future we're ready.
+- [ ] Bonus zone: Get a new hat.
+- [ ] Static dialogue near start, advise that there are two buttons etc.
+- [ ] Having doubts about hello colors. Try a black background?
 - [ ] Is it possible for some draw to be unwinnable? I'm pretty sure it's not, but prove it.
 - - There are definitely cases that boil down to luck, eg the Witch gets dealt all four Kings.
 - [ ] Get clue text from Skibbl, write in the surgeon general's warning box.

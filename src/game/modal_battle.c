@@ -8,6 +8,7 @@
 #define BGCOLOR 0x0a5617ff
 #define TEXTCOLOR 0xe8ddbbff
 #define CHEAT_LIMIT 20 /* Longer than the longest cheat code. */
+#define FAST_FORWARD_RATE 3.000
 
 #define STAGE_INTRO    1 /* Lower layers remain visible, transition to bg color. */
 #define STAGE_PICK     2 /* Player picks her cards. */
@@ -52,6 +53,7 @@ struct modal_battle {
   int rankp; // Where is Dot's finger, in (rankv).
   int picking_rank;
   int confirmp; // -1,0,1 = irrelevant,yes,no. >=0 when asking for confirmation
+  int fastforward; // During REVEAL, ALIGN, and DISBURSE, speed up the animation.
   
   /* Same as (cpu_play,man_play) but cardid.
    * Length is (suitc).
@@ -402,7 +404,9 @@ static void battle_update_PICK(struct modal *modal,double elapsed,int input) {
  */
  
 static void battle_update_REVEAL(struct modal *modal,double elapsed,int input) {
-  MODAL->stageclock+=elapsed;
+  if ((input&EGG_BTN_SOUTH)&&!(MODAL->pvinput&EGG_BTN_SOUTH)) MODAL->fastforward=1;
+  if (MODAL->fastforward) MODAL->stageclock+=elapsed*FAST_FORWARD_RATE;
+  else MODAL->stageclock+=elapsed;
   if (MODAL->stageclock>=2.0) {
     MODAL->stage=STAGE_ALIGN;
     MODAL->stageclock=0.0;
@@ -423,7 +427,9 @@ static int battle_card_of_suit(const int *v,int c,int suit) {
  */
  
 static void battle_update_ALIGN(struct modal *modal,double elapsed,int input) {
-  MODAL->stageclock+=elapsed;
+  if ((input&EGG_BTN_SOUTH)&&!(MODAL->pvinput&EGG_BTN_SOUTH)) MODAL->fastforward=1;
+  if (MODAL->fastforward) MODAL->stageclock+=elapsed*FAST_FORWARD_RATE;
+  else MODAL->stageclock+=elapsed;
   if (MODAL->stageclock>=1.0) {
     MODAL->stage=STAGE_DISBURSE;
     MODAL->stageclock=0.0;
@@ -477,7 +483,8 @@ static void battle_update_ALIGN(struct modal *modal,double elapsed,int input) {
  */
  
 static void battle_update_DISBURSE(struct modal *modal,double elapsed,int input) {
-  MODAL->stageclock+=elapsed; // For animation only.
+  if (MODAL->fastforward) MODAL->stageclock+=elapsed*FAST_FORWARD_RATE;
+  else MODAL->stageclock+=elapsed;
   if ((input&EGG_BTN_SOUTH)&&!(MODAL->pvinput&EGG_BTN_SOUTH)) {
     g.input_blackout|=EGG_BTN_SOUTH;
     if (MODAL->cb) {
