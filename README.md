@@ -71,21 +71,24 @@ Actual:
 - - ...would be a big problem, but it's actually not possible: You need 30 to reach the east section, and that can't be done without picking up all the loose cards.
 - [ ] Is it possible for some draw to be unwinnable? I'm pretty sure it's not, but prove it.
 - - There are definitely cases that boil down to luck, eg the Witch gets dealt all four Kings.
-- [ ] Figure out how we're giving the cross-game clue, and what our bonus is.
-- - [ ] I'm sure we'll at least need a trivial dialogue sprite.
+- [x] Figure out how we're giving the cross-game clue, and what our bonus is.
+- - [x] I'm sure we'll at least need a trivial dialogue sprite. ...haven't needed yet, wow. No worries if we eventually do.
 - - [x] Maybe a trick-floor puzzle in the graveyard where you have to consult the compass? It could be there all along and the clue is just "look at your compass in the graveyard".
+- - Surgeon General's Warning label in the sea. You can see a corner of it from the southeast island, and it's plainly visible via peek from home or southeast.
+- - Just need the text for it.
 - [ ] Proper map.
 - [x] Music.
 - - I think no battle music, just one song during play. So it needs to be pretty long.
 - - Then a no-repeat for gameover, and short ones for hello and victory.
 - [x] Sound effects.
 - [x] The piano bridge should make sounds when you walk over it.
-- [ ] Gameover music.
+- [x] Gameover music. ...meh, i like silence here. And it's actually very hard to reach anyway.
 - [ ] Landing page.
 - [ ] Eliminate `args` from sprite -- ended up not using them.
 
 After the jam.
 - [ ] Restore universal menu, in metadata.
+- [ ] Put the graveyard clue somewhere reachable.
 
 Expansion ideas, probably not in scope for the jam.
 - [ ] Consider using two full-size images, one for roofs, and mark the roofed regions so it disappears when you're inside.
