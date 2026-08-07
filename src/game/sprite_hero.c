@@ -177,6 +177,8 @@ static void _hero_render(struct sprite *sprite,int x,int y) {
     case 3: tileid+=0x20; break;
   }
   
+  if (g.hat) tileid+=0x30;
+  
   graf_tile(&g.graf,x,y,tileid,xform);
 }
 

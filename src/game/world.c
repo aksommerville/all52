@@ -69,6 +69,7 @@ static int world_freergn(int xlo,int ylo,int xhi,int yhi,int spritec) {
     int x=xlo; for (;x<=xhi;x++) {
       if (cellc>=1024) break;
       if ((x==32)&&(y==32)) break; // Skip this one, where the hero goes. Easier than scanning sprites generically.
+      if ((x==41)&&(y==41)) break; // '' ...hopefully we won't have many sprites like this...
       if (!((*physics)&phmask)) {
         cellv[cellc++]=y*MAPW+x;
       }
@@ -176,7 +177,7 @@ static int world_populate() {
   world.family=1;
   
   int seed=get_rand_seed();
-  fprintf(stderr,"Random seed 0x%08x\n",seed);
+  //fprintf(stderr,"Random seed 0x%08x\n",seed);
   
   /* Hero at a fixed point (the very middle).
    */
@@ -213,6 +214,9 @@ static int world_populate() {
   /* Other sprites.
    */
   if (!(sprite=sprite_spawn(&sprite_type_bonusguard,15.5,33.5,0,0))) return -1;
+  if (!(sprite=sprite_spawn(&sprite_type_dialogue,41.5,41.5,0,0))) return -1;
+  sprite_dialogue_set_strix(sprite,28);
+  if (!(sprite=sprite_spawn(&sprite_type_treasure,9.5,41.5,0,0))) return -1;
   
   if (world.deck) {
     fprintf(stderr,"%s:%d:OOPS: Failed to deal out the whole deck.",__FILE__,__LINE__);
@@ -229,6 +233,7 @@ static int world_populate() {
 int world_reset() {
   world_quit();
   world.init=1;
+  g.hat=0;
   if (world_populate()<0) return -1;
   return 0;
 }

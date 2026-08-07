@@ -54,8 +54,8 @@ Actual:
 
 ## TODO
 
-- [ ] Bonus zone: Get a new hat.
-- [ ] Static dialogue near start, advise that there are two buttons etc.
+- [x] Bonus zone: Get a new hat.
+- [x] Static dialogue near start, advise that there are two buttons etc.
 - [x] Having doubts about hello colors. Try a black background?
 - [ ] Is it possible for some draw to be unwinnable? I'm pretty sure it's not, but prove it.
 - - There are definitely cases that boil down to luck, eg the Witch gets dealt all four Kings.

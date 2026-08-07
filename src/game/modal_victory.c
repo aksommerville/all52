@@ -101,6 +101,12 @@ static void _victory_render(struct modal *modal) {
   graf_decal(&g.graf,0,0,FBW,0,FBW,FBH);
   graf_set_input(&g.graf,MODAL->texid);
   graf_decal(&g.graf,20,40,0,0,MODAL->texw,MODAL->texh);
+  
+  // If she has the pineapple hat, amend the image a little:
+  if (g.hat) {
+    graf_set_input(&g.graf,g.texid_modals);
+    graf_decal(&g.graf,20,31,105,31,7,8);
+  }
 }
 
 const struct modal_type modal_type_victory={

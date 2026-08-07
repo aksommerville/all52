@@ -56,6 +56,8 @@ extern const struct sprite_type sprite_type_card;
 extern const struct sprite_type sprite_type_guard;
 extern const struct sprite_type sprite_type_ghost;
 extern const struct sprite_type sprite_type_bonusguard;
+extern const struct sprite_type sprite_type_dialogue;
+extern const struct sprite_type sprite_type_treasure;
 
 void sprite_hero_input(struct sprite *sprite,int input);
 
@@ -79,5 +81,7 @@ int sprite_card_set_hand(struct sprite *sprite,uint64_t hand);
 int sprite_guard_set_limit(struct sprite *sprite,int limit);
 
 uint8_t sprite_bonusguard_get_compass_override(struct sprite *sprite,struct sprite *hero); // See modal_status.c:get_compass_override
+
+int sprite_dialogue_set_strix(struct sprite *sprite,int strix);
 
 #endif

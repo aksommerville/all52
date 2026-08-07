@@ -41,6 +41,7 @@ extern struct g {
   int input_blackout;
   int finish; // -1 to lose or 1 to win, effected at the end of modal_world's update.
   double playclock;
+  int hat;
   
   int texid_world;
   int texid_sprites;
