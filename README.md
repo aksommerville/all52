@@ -54,6 +54,7 @@ Actual:
 
 ## TODO
 
+- [ ] Record globally whether cheating was used, same idea as hat, and report it at victory.
 - [x] Bonus zone: Get a new hat.
 - [x] Static dialogue near start, advise that there are two buttons etc.
 - [x] Having doubts about hello colors. Try a black background?
