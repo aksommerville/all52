@@ -22,6 +22,7 @@ export class PhysicsEditor {
     this.penx = -1;
     this.peny = -1;
     this.dirty = false;
+    this.dupsImage = null;
     
     this.data.getImageAsync("world").then(img => {
       this.image = img;
@@ -49,6 +50,15 @@ export class PhysicsEditor {
       throw new Error(`PhysicsEditor expected 512 bytes, found ${this.res.serial.length}`);
     }
     this.buildUi();
+  }
+  
+  /* Called by Override.js:validateTiles(), so we can show visually which tiles are duplicates.
+   * (dups) is null if the image is kosher, or if we don't want to highlight anymore.
+   * If not null, it's a map-sized image transparent where valid, otherwise an opaque primary color, never black.
+   */
+  setDupsHighlight(dups) {
+    this.dupsImage = dups;
+    this.renderSoon();
   }
   
   buildUi() {
@@ -94,9 +104,14 @@ export class PhysicsEditor {
       ctx.drawImage(this.image, srcx, srcy, srcw, srch, 0, 0, this.view.width, this.view.height);
     }
     
-    /* Show the physics.
+    /* Show the physics or duplicates.
      */
-    if (this.res) {
+    if (this.dupsImage) {
+      // Duplicates can't be black. So first blacken the background image, to help the dups stand out.
+      ctx.fillStyle = "#000a";
+      ctx.fillRect(0, 0, this.view.width, this.view.height);
+      ctx.drawImage(this.dupsImage, srcx, srcy, srcw, srch, 0, 0, this.view.width, this.view.height);
+    } else if (this.res) {
       const src = this.res.serial;
       const colw = 8 * this.zoom;
       const rowh = 8 * this.zoom;
