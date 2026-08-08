@@ -220,6 +220,7 @@ static void battle_cheat_prompt(struct modal *modal,const char *src) {
 static void battle_update_INTRO(struct modal *modal,double elapsed,int input) {
   if ((MODAL->stageclock-=elapsed)<=0.0) {
     if (battle_check_cheat(modal,EGG_BTN_WEST,EGG_BTN_WEST,EGG_BTN_WEST,0)) {
+      g.cheated=1;
       MODAL->stage=STAGE_CHEAT_WIN_ALL;
       battle_cheat_prompt(modal,"Cheat: you win!");
     } else {

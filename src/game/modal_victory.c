@@ -107,6 +107,12 @@ static void _victory_render(struct modal *modal) {
     graf_set_input(&g.graf,g.texid_modals);
     graf_decal(&g.graf,20,31,105,31,7,8);
   }
+  
+  // Similar overlay if she cheated.
+  if (g.cheated) {
+    graf_set_input(&g.graf,g.texid_modals);
+    graf_decal(&g.graf,28,23,104,14,24,16);
+  }
 }
 
 const struct modal_type modal_type_victory={

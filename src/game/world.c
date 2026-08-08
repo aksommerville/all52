@@ -234,6 +234,7 @@ int world_reset() {
   world_quit();
   world.init=1;
   g.hat=0;
+  g.cheated=0;
   if (world_populate()<0) return -1;
   return 0;
 }

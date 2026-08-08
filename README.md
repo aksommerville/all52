@@ -54,21 +54,16 @@ Actual:
 
 ## TODO
 
-- [ ] Record globally whether cheating was used, same idea as hat, and report it at victory.
-- [x] Bonus zone: Get a new hat.
-- [x] Static dialogue near start, advise that there are two buttons etc.
-- [x] Having doubts about hello colors. Try a black background?
 - [ ] Is it possible for some draw to be unwinnable? I'm pretty sure it's not, but prove it.
 - - There are definitely cases that boil down to luck, eg the Witch gets dealt all four Kings.
 - [ ] Get clue text from Skibbl, write in the surgeon general's warning box.
 - [ ] And something in the billboard north of the graveyard.
-- [x] Proper map.
 - [ ] Landing page.
-- [x] Eliminate `args` from sprite -- ended up not using them.
 
 After the jam.
 - [ ] Restore universal menu, in metadata.
 - [ ] Put the graveyard clue somewhere reachable.
+- [ ] Consider removing the cheat code? Was going to be dev only, but it's not as discoverable as I feared. Maybe just leave it forever.
 
 Expansion ideas, probably not in scope for the jam.
 - [ ] Consider using two full-size images, one for roofs, and mark the roofed regions so it disappears when you're inside.
