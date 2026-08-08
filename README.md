@@ -54,6 +54,7 @@ Actual:
 
 ## TODO
 
+- [x] I forgot the dumpster's physics!
 - [ ] Is it possible for some draw to be unwinnable? I'm pretty sure it's not, but prove it.
 - - There are definitely cases that boil down to luck, eg the Witch gets dealt all four Kings.
 - [ ] Get clue text from Skibbl, write in the surgeon general's warning box.
