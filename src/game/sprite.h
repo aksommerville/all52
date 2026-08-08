@@ -27,7 +27,7 @@ struct sprite_type {
   
   /* Return <0 or set (defunct) to abort construction.
    */
-  int (*init)(struct sprite *sprite,const void *args,int argslen);
+  int (*init)(struct sprite *sprite);
   
   void (*update)(struct sprite *sprite,double elapsed);
   
@@ -45,7 +45,7 @@ struct sprite_type {
 };
 
 void sprite_del(struct sprite *sprite);
-struct sprite *sprite_new(const struct sprite_type *type,double x,double y,const void *args,int argslen);
+struct sprite *sprite_new(const struct sprite_type *type,double x,double y);
 
 /* Species.
  ***********************************************************************/

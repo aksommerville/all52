@@ -15,7 +15,7 @@ int world_reset();
 
 void world_update(double elapsed,int input);
 
-struct sprite *sprite_spawn(const struct sprite_type *type,double x,double y,const void *args,int argslen);
+struct sprite *sprite_spawn(const struct sprite_type *type,double x,double y);
 
 /* It's generally safe to operate on individual sprites from anywhere.
  * The lists don't move except when the update cycle is complete.

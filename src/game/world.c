@@ -93,7 +93,7 @@ static int world_freergn(int xlo,int ylo,int xhi,int yhi,int spritec) {
     cellc--;
     memmove(cellv+cellp,cellv+cellp+1,sizeof(int)*(cellc-cellp));
     
-    struct sprite *sprite=sprite_spawn(&sprite_type_card,x+0.5,y+0.5,0,0);
+    struct sprite *sprite=sprite_spawn(&sprite_type_card,x+0.5,y+0.5);
     if (!sprite) return -1;
     uint64_t hand=hand_deal_n(world.deck,1);
     if (!hand) {
@@ -152,7 +152,7 @@ static int world_poprgn(int xlo,int ylo,int xhi,int yhi,int spritec,int cardc_pe
     cellc--;
     memmove(cellv+cellp,cellv+cellp+1,sizeof(int)*(cellc-cellp));
     
-    struct sprite *sprite=sprite_spawn(&sprite_type_monster,x+0.5,y+0.5,0,0);
+    struct sprite *sprite=sprite_spawn(&sprite_type_monster,x+0.5,y+0.5);
     if (!sprite) return -1;
     uint64_t hand=hand_deal_n(world.deck,cardc_per);
     if (!hand) {
@@ -181,7 +181,7 @@ static int world_populate() {
   
   /* Hero at a fixed point (the very middle).
    */
-  struct sprite *hero=sprite_spawn(&sprite_type_hero,32.5,32.5,0,0);
+  struct sprite *hero=sprite_spawn(&sprite_type_hero,32.5,32.5);
   if (!hero) return -1;
   
   /* Monsters spawn within specific ranges.
@@ -204,19 +204,19 @@ static int world_populate() {
   /* Three Card Guards, blocking specific regions.
    */
   struct sprite *sprite;
-  if (!(sprite=sprite_spawn(&sprite_type_guard,34.5,25.5,0,0))) return -1;
+  if (!(sprite=sprite_spawn(&sprite_type_guard,34.5,25.5))) return -1;
   sprite_guard_set_limit(sprite,10);
-  if (!(sprite=sprite_spawn(&sprite_type_guard,43.5,37.5,0,0))) return -1;
+  if (!(sprite=sprite_spawn(&sprite_type_guard,43.5,37.5))) return -1;
   sprite_guard_set_limit(sprite,30);
-  if (!(sprite=sprite_spawn(&sprite_type_guard,53.5,35.5,0,0))) return -1;
+  if (!(sprite=sprite_spawn(&sprite_type_guard,53.5,35.5))) return -1;
   sprite_guard_set_limit(sprite,40);
   
   /* Other sprites.
    */
-  if (!(sprite=sprite_spawn(&sprite_type_bonusguard,15.5,33.5,0,0))) return -1;
-  if (!(sprite=sprite_spawn(&sprite_type_dialogue,41.5,41.5,0,0))) return -1;
+  if (!(sprite=sprite_spawn(&sprite_type_bonusguard,15.5,33.5))) return -1;
+  if (!(sprite=sprite_spawn(&sprite_type_dialogue,41.5,41.5))) return -1;
   sprite_dialogue_set_strix(sprite,28);
-  if (!(sprite=sprite_spawn(&sprite_type_treasure,9.5,41.5,0,0))) return -1;
+  if (!(sprite=sprite_spawn(&sprite_type_treasure,9.5,41.5))) return -1;
   
   if (world.deck) {
     fprintf(stderr,"%s:%d:OOPS: Failed to deal out the whole deck.",__FILE__,__LINE__);
@@ -311,8 +311,8 @@ void world_update(double elapsed,int input) {
 /* Spawn sprite.
  */
  
-struct sprite *sprite_spawn(const struct sprite_type *type,double x,double y,const void *args,int argslen) {
-  struct sprite *sprite=sprite_new(type,x,y,args,argslen);
+struct sprite *sprite_spawn(const struct sprite_type *type,double x,double y) {
+  struct sprite *sprite=sprite_new(type,x,y);
   if (!sprite) return 0;
   if (world.spritec>=SPRITE_LIMIT) {
     sprite_del(sprite);

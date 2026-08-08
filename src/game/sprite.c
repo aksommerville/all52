@@ -13,7 +13,7 @@ void sprite_del(struct sprite *sprite) {
 /* New.
  */
  
-struct sprite *sprite_new(const struct sprite_type *type,double x,double y,const void *args,int argslen) {
+struct sprite *sprite_new(const struct sprite_type *type,double x,double y) {
   if (!type) return 0;
   struct sprite *sprite=calloc(1,type->objlen);
   if (!sprite) return 0;
@@ -25,7 +25,7 @@ struct sprite *sprite_new(const struct sprite_type *type,double x,double y,const
   sprite->y=y;
   sprite->layer=100;
   
-  if (type->init&&((type->init(sprite,args,argslen)<0)||sprite->defunct)) {
+  if (type->init&&((type->init(sprite)<0)||sprite->defunct)) {
     sprite_del(sprite);
     return 0;
   }

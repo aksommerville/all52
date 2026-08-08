@@ -11,13 +11,6 @@ struct sprite_card {
 
 #define SPRITE ((struct sprite_card*)sprite)
 
-/* Init.
- */
- 
-static int _card_init(struct sprite *sprite,const void *args,int argslen) {
-  return 0;
-}
-
 /* Bump.
  */
  
@@ -64,7 +57,6 @@ static void _card_render(struct sprite *sprite,int x,int y) {
 const struct sprite_type sprite_type_card={
   .name="card",
   .objlen=sizeof(struct sprite_card),
-  .init=_card_init,
   .bump=_card_bump,
   .render=_card_render,
 };

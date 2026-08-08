@@ -11,10 +11,6 @@ struct sprite_guard {
 
 #define SPRITE ((struct sprite_guard*)sprite)
 
-static int _guard_init(struct sprite *sprite,const void *args,int argslen) {
-  return 0;
-}
-
 static int _guard_bump(struct sprite *sprite,struct sprite *hero) {
   int cardc=hand_count_cards(sprite_hero_get_hand(hero));
   if (cardc<SPRITE->limit) {
@@ -45,7 +41,6 @@ static void _guard_render(struct sprite *sprite,int x,int y) {
 const struct sprite_type sprite_type_guard={
   .name="guard",
   .objlen=sizeof(struct sprite_guard),
-  .init=_guard_init,
   .bump=_guard_bump,
   .render=_guard_render,
 };

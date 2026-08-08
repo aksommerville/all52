@@ -13,7 +13,7 @@ struct sprite_ghost {
 
 #define SPRITE ((struct sprite_ghost*)sprite)
 
-static int _ghost_init(struct sprite *sprite,const void *args,int argslen) {
+static int _ghost_init(struct sprite *sprite) {
   SPRITE->ttl=2.000;
   SPRITE->dy=-5.000;
   SPRITE->dx=1.000+((rand()&0xffff)*3.000)/65535.0;

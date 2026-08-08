@@ -61,9 +61,10 @@ Actual:
 - [ ] Is it possible for some draw to be unwinnable? I'm pretty sure it's not, but prove it.
 - - There are definitely cases that boil down to luck, eg the Witch gets dealt all four Kings.
 - [ ] Get clue text from Skibbl, write in the surgeon general's warning box.
-- [ ] Proper map.
+- [ ] And something in the billboard north of the graveyard.
+- [x] Proper map.
 - [ ] Landing page.
-- [ ] Eliminate `args` from sprite -- ended up not using them.
+- [x] Eliminate `args` from sprite -- ended up not using them.
 
 After the jam.
 - [ ] Restore universal menu, in metadata.
@@ -73,3 +74,10 @@ Expansion ideas, probably not in scope for the jam.
 - [ ] Consider using two full-size images, one for roofs, and mark the roofed regions so it disappears when you're inside.
 - [ ] Play cards outside battle, like spells.
 - [ ] Monsters that play a different game with the same cards.
+
+## Lessons Learned
+
+- Map of all unique tiles: Nope. Ridiculous amount of work and it's really pointless. Some things, like water, really are supposed to duplicate.
+- Clue exchange with another jam dev: (wait for the juding period, see how people react)
+- Hiding clues in the map that you have to peek for: Fun and cheap, should be a standard trick. I'm also using this in Bellacopia already, with the Telescope.
+- Collecting 52 of something takes time. I trimmed a lot to keep play time down, and it's still more than I'd like.

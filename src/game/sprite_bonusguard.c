@@ -26,19 +26,6 @@ struct sprite_bonusguard {
 
 #define SPRITE ((struct sprite_bonusguard*)sprite)
 
-/* Cleanup.
- */
- 
-static void _bonusguard_del(struct sprite *sprite) {
-}
-
-/* Init.
- */
- 
-static int _bonusguard_init(struct sprite *sprite,const void *args,int argslen) {
-  return 0;
-}
-
 /* Update.
  */
  
@@ -169,8 +156,6 @@ static void _bonusguard_render(struct sprite *sprite,int x,int y) {
 const struct sprite_type sprite_type_bonusguard={
   .name="bonusguard",
   .objlen=sizeof(struct sprite_bonusguard),
-  .del=_bonusguard_del,
-  .init=_bonusguard_init,
   .update=_bonusguard_update,
   .bump=_bonusguard_bump,
   .render=_bonusguard_render,

@@ -12,7 +12,7 @@ struct sprite_dialogue {
 
 #define SPRITE ((struct sprite_dialogue*)sprite)
 
-static int _dialogue_init(struct sprite *sprite,const void *args,int argslen) {
+static int _dialogue_init(struct sprite *sprite) {
   SPRITE->tileid=0x44;
   return 0;
 }

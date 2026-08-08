@@ -23,16 +23,10 @@ struct sprite_monster {
 
 #define SPRITE ((struct sprite_monster*)sprite)
 
-/* Cleanup.
- */
- 
-static void _monster_del(struct sprite *sprite) {
-}
-
 /* Init.
  */
  
-static int _monster_init(struct sprite *sprite,const void *args,int argslen) {
+static int _monster_init(struct sprite *sprite) {
   SPRITE->tileid=0x00; // I'm Dot if they forget to set this.
   SPRITE->faceclock=((rand()&0xffff)/65535.0);
   return 0;
@@ -262,7 +256,7 @@ static void monster_cb_battle(struct modal *modal) {
   } else {
     sprite->defunct=1;
     SFX(vanquish)
-    sprite_spawn(&sprite_type_ghost,sprite->x,sprite->y,0,0);
+    sprite_spawn(&sprite_type_ghost,sprite->x,sprite->y);
     if (manhand==0x000fffffffffffffll) {
       g.finish=1;
     }
@@ -320,7 +314,6 @@ static void _monster_render(struct sprite *sprite,int x,int y) {
 const struct sprite_type sprite_type_monster={
   .name="monster",
   .objlen=sizeof(struct sprite_monster),
-  .del=_monster_del,
   .init=_monster_init,
   .update=_monster_update,
   .render=_monster_render,

@@ -23,16 +23,10 @@ struct sprite_hero {
 
 #define SPRITE ((struct sprite_hero*)sprite)
 
-/* Cleanup.
- */
- 
-static void _hero_del(struct sprite *sprite) {
-}
-
 /* Init.
  */
  
-static int _hero_init(struct sprite *sprite,const void *args,int argslen) {
+static int _hero_init(struct sprite *sprite) {
 
   SPRITE->qx=(int)sprite->x;
   SPRITE->qy=(int)sprite->y;
@@ -188,7 +182,6 @@ static void _hero_render(struct sprite *sprite,int x,int y) {
 const struct sprite_type sprite_type_hero={
   .name="hero",
   .objlen=sizeof(struct sprite_hero),
-  .del=_hero_del,
   .init=_hero_init,
   .update=_hero_update,
   .render=_hero_render,
